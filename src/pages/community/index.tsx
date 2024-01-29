@@ -92,8 +92,8 @@ const Post = (post) => {
             backgroundColor: post.props.deleted
               ? 'error.main'
               : post.props.approved
-                ? 'success.main'
-                : 'warning.main',
+              ? 'success.main'
+              : 'warning.main',
           }}
         ></Box>
         <Grid item>
@@ -157,7 +157,7 @@ const Post = (post) => {
 
 const Posts = () => {
   const [page, setPage] = useState(1);
-  const [component, { error, loading }] = useComponent('my-forum', {
+  const [component, { error, loading }] = useComponent(FORUM_KEY, {
     props: {
       page: page,
       pageSize: PAGE_SIZE_POSTS,
