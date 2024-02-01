@@ -289,7 +289,10 @@ export const Layout = () => {
               </Typography>
               <Grid container spacing={1} justifyContent="center">
                 <Grid item xs={12} sm={6} md={4} xl={2}>
-                  <Card sx={{ m: 1, mb: 0 }} elevation={0}>
+                  <Card
+                    sx={{ m: 1, mb: 0, backgroundColor: 'primary.main' }}
+                    elevation={0}
+                  >
                     <CardHeader title="Social"></CardHeader>
                     <CardContent>
                       <div className={styles.impressum}>
@@ -353,7 +356,10 @@ export const Layout = () => {
                   </Card>
                 </Grid>
                 <Grid item xs={12} sm={6} md={4} xl={2}>
-                  <Card sx={{ m: 1, mb: 0 }} elevation={0}>
+                  <Card
+                    sx={{ m: 1, mb: 0, backgroundColor: 'primary.main' }}
+                    elevation={0}
+                  >
                     <CardHeader title="Contact"></CardHeader>
                     <CardContent>
                       <div className={styles.impressum}>
