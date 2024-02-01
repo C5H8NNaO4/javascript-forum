@@ -138,7 +138,7 @@ export const Markdown = ({
                   </IconButton>
                 </Box>
                 <SyntaxHighlighter language={language} style={a11yDark}>
-                  {props.children[0].props.children}
+                  {props.children[0]?.props.children}
                 </SyntaxHighlighter>
               </>
             );
@@ -179,7 +179,7 @@ export const Markdown = ({
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {props.children[1].props.children.map((row) => {
+                  {props.children[1]?.props?.children?.map((row) => {
                     return (
                       <TableRow>
                         {row.props.children.map((e) => {

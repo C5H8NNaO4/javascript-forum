@@ -47,6 +47,7 @@ export const CommunityPage = () => {
       .getElementById('root-container')
       ?.scrollTo({ top: 0, behavior: 'smooth' });
   }, [page]);
+
   return (
     <Container maxWidth="lg" disableGutters>
       <Card
@@ -125,6 +126,7 @@ const Post = (post) => {
   const nAnswers = post.children.filter(
     (c) => c?.props?.body && !c?.props?.deleted
   )?.length;
+
   return (
     <Card
       square
@@ -140,8 +142,8 @@ const Post = (post) => {
               backgroundColor: post.props.deleted
                 ? 'error.main'
                 : post.props.approved
-                ? 'success.main'
-                : 'warning.main',
+                  ? 'success.main'
+                  : 'warning.main',
             }}
           ></Box>
         )}
@@ -219,6 +221,7 @@ const Posts = ({ page, setPage, component }) => {
   const sticky = component?.children?.filter((post) => post.props.sticky) || [];
   const nonSticky =
     component?.children?.filter((post) => !post.props.sticky) || [];
+
   return (
     <FlexBox sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
