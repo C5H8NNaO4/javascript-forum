@@ -124,10 +124,8 @@ export const NewPost = () => {
                   tags,
                 });
 
-                console.log('POST', post);
-
                 setTimeout(() => {
-                  navigate(`/forum/post-${post.id}`);
+                  navigate(`/post-${post.id}`);
                 }, 250);
               }}
             >

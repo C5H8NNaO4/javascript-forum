@@ -284,7 +284,7 @@ export const Layout = () => {
             >
               <Typography variant="body2" color="textSecondary" align="center">
                 <Link href="https://state-less.cloud">
-                  © 2023 React Server
+                  © {new Date().getFullYear()} React Server
                 </Link>
               </Typography>
               <Grid container spacing={1} justifyContent="center">
