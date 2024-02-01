@@ -41,11 +41,13 @@ export default function ButtonAppBar() {
         </IconButton>
         {!lessThanSmall && (
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            <img src="/react-server.png" style={{ width: 24, height: 24 }} />
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png"
+              style={{ width: 24, height: 24 }}
+            />
             <Link component={RouterLink} to="/" sx={{ color: 'white' }}>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                {navigation.find((nav) => nav[0] === pathname)?.[3] ||
-                  'React Server'}
+                {navigation.find((nav) => nav[0] === pathname)?.[3] || 'Forum'}
               </Typography>
             </Link>
           </Box>
@@ -105,8 +107,8 @@ export default function ButtonAppBar() {
                 state.animatedBackground === 2
                   ? 'secondary'
                   : state.animatedBackground === 1
-                  ? 'info'
-                  : 'inherit'
+                    ? 'info'
+                    : 'inherit'
               }
               onClick={() => {
                 dispatch({ type: Actions.TOGGLE_ANIMATED_BACKGROUND });
