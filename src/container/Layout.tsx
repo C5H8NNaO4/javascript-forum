@@ -279,7 +279,7 @@ export const Layout = () => {
                   md: 2,
                 },
                 mt: 16,
-                backgroundColor: 'primary.main',
+                backgroundColor: 'secondary.main',
               }}
             >
               <Typography variant="body2" color="textSecondary" align="center">
