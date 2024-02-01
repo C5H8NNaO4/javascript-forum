@@ -9,7 +9,7 @@ export const MainPage = () => {
         <CardContent>
           <Markdown>
             {`
-Go to [/community](/community) to see the community page.
+Go to [/forum](/forum) to see the community page.
 `}
           </Markdown>
         </CardContent>

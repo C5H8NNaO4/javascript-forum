@@ -121,6 +121,10 @@ export const Markdown = ({
               return <Mermaid>{props.children[0].props.children}</Mermaid>;
             }
 
+            const child = Array.isArray(props.children)
+              ? props.children[0]
+              : props.children;
+              
             return (
               <>
                 <Box sx={{ width: '100%', display: 'flex' }}>
@@ -138,7 +142,7 @@ export const Markdown = ({
                   </IconButton>
                 </Box>
                 <SyntaxHighlighter language={language} style={a11yDark}>
-                  {props.children[0]?.props.children}
+                  {child.props.children}
                 </SyntaxHighlighter>
               </>
             );
@@ -179,7 +183,7 @@ export const Markdown = ({
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {props.children[1]?.props?.children?.map((row) => {
+                  {props.children[1].props.children.map((row) => {
                     return (
                       <TableRow>
                         {row.props.children.map((e) => {

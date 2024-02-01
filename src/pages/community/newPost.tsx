@@ -127,7 +127,7 @@ export const NewPost = () => {
                 console.log('POST', post);
 
                 setTimeout(() => {
-                  navigate(`/community/post-${post.id}`);
+                  navigate(`/forum/post-${post.id}`);
                 }, 250);
               }}
             >

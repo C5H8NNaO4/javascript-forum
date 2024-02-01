@@ -181,7 +181,7 @@ const Post = (post) => {
             <CardHeader
               title={
                 <Link
-                  to={`/community/${post.component}`}
+                  to={`/forum/${post.component}`}
                   component={RouterLink}
                 >
                   {post.props.title}
@@ -270,7 +270,7 @@ const Header = ({ pageSize, setPageSize }) => {
 export const NewPostButton = () => {
   return (
     <Button variant="contained" color="secondary" sx={{ ml: 'auto' }}>
-      <Link to="/community/new" component={RouterLink}>
+      <Link to="/forum/new" component={RouterLink}>
         Ask Question
       </Link>
     </Button>
