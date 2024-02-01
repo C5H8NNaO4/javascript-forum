@@ -1,11 +1,7 @@
-import * as React from 'react';
-import Checkbox from '@mui/material/Checkbox';
 import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
-  styled,
 } from '@mui/material/styles';
-import { orange } from '@mui/material/colors';
 
 declare module '@mui/material/styles' {
   interface Theme {
@@ -24,10 +20,10 @@ declare module '@mui/material/styles' {
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#66BEE7', //'#FDD804',
+      main: '#F3DD55', //'#FDD804',
     },
     secondary: {
-      main: '#FFDF00', //'#F66528',
+      main: '#393937', //'#F66528',
     },
   },
 });
