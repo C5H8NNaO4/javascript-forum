@@ -5,14 +5,13 @@ import { PostsPage } from './pages/community/post';
 import HomeIcon from '@mui/icons-material/Home';
 import { MainPage } from './pages';
 
-
 export const navigation = [
-  ['/', 'Home', '', 'My Forum', HomeIcon],
-  ['/community', 'Community', '', 'My Forum', HomeIcon],
+  ['/', 'Home', '', 'JavaScript Forum', HomeIcon],
+  ['/forum', 'Forumm', '', 'JavaScript Forum', HomeIcon],
 ] as any;
 
 export const routes = [
   <Route path="/" Component={MainPage} />,
-  <Route path="/community" Component={CommunityPage} />,
-  <Route path="/community/:post" Component={PostsPage} />, 
+  <Route path="/forum" Component={CommunityPage} />,
+  <Route path="/forum/:post" Component={PostsPage} />,
 ];
