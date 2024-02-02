@@ -178,7 +178,11 @@ const Post = (post) => {
           <Box>
             <CardHeader
               title={
-                <Link to={`/${post.component}`} component={RouterLink}>
+                <Link
+                  sx={{ color: 'secondary.main' }}
+                  to={`/${post.component}`}
+                  component={RouterLink}
+                >
                   {post.props.title}
                 </Link>
               }
