@@ -79,9 +79,7 @@ export const CommunityPage = () => {
         </CardContent>
         <CardActions>
           <Pagination
-            count={
-              Math.ceil(component?.props?.totalCount / PAGE_SIZE_POSTS) || 0
-            }
+            count={Math.ceil(component?.props?.totalCount / pageSize) || 0}
             page={page}
             onChange={(_, p) => setPage(p)}
           />
