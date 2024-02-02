@@ -7,19 +7,22 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import { ThemeProvider } from './provider/ThemeProvider';
 import { Layout } from './container/Layout';
+import { AuthProvider } from '@state-less/react-client';
 
 function App() {
   return (
     <ApolloProvider
-      client={import.meta.env.MODE === 'production' ? client : client}
+      client={import.meta.env.MODE === 'production' ? client : localClient}
     >
-      <StateProvider>
-        <ThemeProvider>
-          <Router>
-            <Layout />
-          </Router>
-        </ThemeProvider>
-      </StateProvider>
+      <AuthProvider>
+        <StateProvider>
+          <ThemeProvider>
+            <Router>
+              <Layout />
+            </Router>
+          </ThemeProvider>
+        </StateProvider>
+      </AuthProvider>
     </ApolloProvider>
   );
 }
