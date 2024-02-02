@@ -43,7 +43,11 @@ export default function ButtonAppBar() {
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png"
-              style={{ width: 24, height: 24 }}
+              style={{
+                width: 24,
+                height: 24,
+                boxShadow: '0px 0px 1.5px 0px black',
+              }}
             />
             <Link component={RouterLink} to="/" sx={{ color: 'white' }}>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
