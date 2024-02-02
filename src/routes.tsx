@@ -3,12 +3,8 @@ import { CommunityPage } from './pages/community';
 import { PostsPage } from './pages/community/post';
 
 import HomeIcon from '@mui/icons-material/Home';
-import { MainPage } from './pages';
 
-export const navigation = [
-  ['/', 'Home', '', 'JavaScript', HomeIcon],
-  ['/forum', 'Forum', '', 'JavaScript', HomeIcon],
-] as any;
+export const navigation = [['/', 'Home', '', 'Forum', HomeIcon]] as any;
 
 export const routes = [
   // <Route path="/" Component={MainPage} />,

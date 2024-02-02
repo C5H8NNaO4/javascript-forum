@@ -50,6 +50,7 @@ export const CommunityPage = () => {
 
   return (
     <Container maxWidth="lg" disableGutters>
+      {JSON.stringify(component?.children)}
       <Card
         sx={{
           px: {
