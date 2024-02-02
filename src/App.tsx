@@ -12,7 +12,7 @@ import { AuthProvider } from '@state-less/react-client';
 function App() {
   return (
     <ApolloProvider
-      client={import.meta.env.MODE === 'production' ? client : client}
+      client={import.meta.env.MODE === 'production' ? client : localClient}
     >
       <AuthProvider>
         <StateProvider>
