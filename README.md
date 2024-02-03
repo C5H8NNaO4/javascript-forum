@@ -1,3 +1,5 @@
+![js-forum-logo](https://github.com/jamespeeler/javascript-forum/assets/44689036/90cd55d5-3304-4e61-9518-eddba01ca503)
+
 # JavaScript.forum
 
 Welcome to the Git repo for the javascript.forum site! 
