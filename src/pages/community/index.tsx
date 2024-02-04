@@ -79,9 +79,7 @@ export const CommunityPage = () => {
         </CardContent>
         <CardActions>
           <Pagination
-            count={
-              Math.ceil(component?.props?.totalCount / PAGE_SIZE_POSTS) || 0
-            }
+            count={Math.ceil(component?.props?.totalCount / pageSize) || 0}
             page={page}
             onChange={(_, p) => setPage(p)}
           />
@@ -180,7 +178,11 @@ const Post = (post) => {
           <Box>
             <CardHeader
               title={
-                <Link to={`/${post.component}`} component={RouterLink}>
+                <Link
+                  sx={{ color: 'secondary.main' }}
+                  to={`/${post.component}`}
+                  component={RouterLink}
+                >
                   {post.props.title}
                 </Link>
               }
