@@ -23,7 +23,6 @@ import {
   ListItemIcon,
   ListItemText,
   Button,
-  LinearProgress,
   Tooltip,
 } from '@mui/material';
 import styles from './Layout.module.css';
@@ -40,11 +39,7 @@ import { SidebarNavigation } from '../components/SidebarNavigation';
 import ChatIcon from '@mui/icons-material/Chat';
 import Snackbar from '@mui/material/Snackbar';
 import HeartIcon from '@mui/icons-material/Favorite';
-import {
-  authContext,
-  useComponent,
-  useLocalStorage,
-} from '@state-less/react-client';
+import { useComponent, useLocalStorage } from '@state-less/react-client';
 import { ViewCounter } from '../server-components/examples/ViewCounter';
 import {
   CONTACT_MAIL,
