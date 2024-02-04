@@ -46,6 +46,7 @@ import {
   useLocalStorage,
 } from '@state-less/react-client';
 import { ViewCounter } from '../server-components/examples/ViewCounter';
+import { CONTACT_PHONE, CONTACT_PHONE_URL } from '../lib/const';
 
 declare let gtag: Function;
 
@@ -376,9 +377,9 @@ export const Layout = () => {
                               <Link
                                 color={'secondary.main'}
                                 component={RouterLink}
-                                to="tel://+4917620350106"
+                                to={`tel://${CONTACT_PHONE_URL}`}
                               >
-                                +49 176 20350106
+                                {CONTACT_PHONE}
                               </Link>
                             </ListItemText>
                           </ListItem>
