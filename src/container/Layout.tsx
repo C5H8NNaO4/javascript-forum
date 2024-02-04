@@ -46,7 +46,7 @@ import {
   useLocalStorage,
 } from '@state-less/react-client';
 import { ViewCounter } from '../server-components/examples/ViewCounter';
-import { CONTACT_PHONE, CONTACT_PHONE_URL } from '../lib/const';
+import { CONTACT_MAIL, CONTACT_PHONE, CONTACT_PHONE_URL } from '../lib/const';
 
 declare let gtag: Function;
 
@@ -392,9 +392,9 @@ export const Layout = () => {
                               <Link
                                 color={'secondary.main'}
                                 component={RouterLink}
-                                to="mailto:moritz.roessler@gmail.com"
+                                to={`mailto:${CONTACT_MAIL}`}
                               >
-                                moritz.roessler@gmail.com
+                                {CONTACT_MAIL}
                               </Link>
                             </ListItemText>
                           </ListItem>
