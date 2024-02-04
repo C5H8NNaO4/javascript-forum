@@ -1,30 +1,19 @@
-# React + TypeScript + Vite
+![js-forum-logo](https://github.com/jamespeeler/javascript-forum/assets/44689036/90cd55d5-3304-4e61-9518-eddba01ca503)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# JavaScript.forum
 
-Currently, two official plugins are available:
+Welcome to the Git repo for the javascript.forum site! 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Whether you're just here to poke around or if you want to collaborate, you are more than welcome!
 
-## Expanding the ESLint configuration
+This README is a living document, so check back for updates!
+## Purpose
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+javascript.forum is a place for all who love JavaScript to come together and discuss our favorite language.
 
-- Configure the top-level `parserOptions` property like this:
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+## Contributing
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Contributions are always welcome!
+
+The site is mostly written in TypeScript and React, so if you're familiar with those, you'll feel right at home! Even if you are already familiar with forking and pull-requests, you should still read through the [contributions](CONTRIBUTIONS.md) page, as there are important style guides to follow.
