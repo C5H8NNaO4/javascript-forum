@@ -46,7 +46,12 @@ import {
   useLocalStorage,
 } from '@state-less/react-client';
 import { ViewCounter } from '../server-components/examples/ViewCounter';
-import { CONTACT_MAIL, CONTACT_PHONE, CONTACT_PHONE_URL } from '../lib/const';
+import {
+  CONTACT_MAIL,
+  CONTACT_PHONE,
+  CONTACT_PHONE_URL,
+  GITHUB_CONTRIBUTE,
+} from '../lib/const';
 
 declare let gtag: Function;
 
@@ -436,10 +441,10 @@ export const Layout = () => {
                             <ListItemText>
                               <Link
                                 component={RouterLink}
-                                to="/collaborating"
+                                to={`${GITHUB_CONTRIBUTE}`}
                                 color={'secondary.main'}
                               >
-                                Collaborate
+                                Contribute
                               </Link>
                             </ListItemText>
                           </ListItem>
