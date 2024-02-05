@@ -8,29 +8,43 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
+  Chip,
 } from '@mui/material';
 
 export type ViewCounterProps = {
   componentKey: string;
   data?: any;
   skip?: boolean;
-  plainText?: boolean;
+  variant?: 'chips' | 'plaintext' | 'listitem';
   clientOnly?: boolean;
 };
-export const ViewCounter = ({
-  componentKey,
-  data,
-  skip,
-  plainText,
-  clientOnly,
-}: ViewCounterProps) => {
-  const [component, { loading }] = useComponent(componentKey, {
-    skip,
-    data,
-  });
 
-  if (plainText) return `${component?.props?.clients} views`;
+export const ViewCounterSpan = ({ component, clientOnly }) => {
+  const clientStr = `${component?.props?.clients} ${clientOnly ? 'views' : 'users'}`;
+  const viewsStr = `${component?.props?.views} views`;
 
+  return (
+    <div>
+      {!clientOnly && <span>{viewsStr}</span>}
+      <span>{clientStr}</span>
+    </div>
+  );
+};
+
+export const ViewCounterChip = ({ clientOnly, loading, component }) => {
+  const clientStr = `${component?.props?.clients} ${clientOnly ? 'views' : 'users'}`;
+  const viewsStr = `${component?.props?.views} views`;
+  return (
+    <>
+      {!clientOnly && (
+        <Chip icon={<VisibilityIcon />} label={loading ? '-' : viewsStr} />
+      )}
+      {<Chip icon={<VisibilityIcon />} label={loading ? '-' : clientStr} />}
+    </>
+  );
+};
+
+export const ViewCounterItem = ({ component, clientOnly, loading }) => {
   return (
     <Tooltip title="Views" placement="left">
       <Box
@@ -57,4 +71,23 @@ export const ViewCounter = ({
       </Box>
     </Tooltip>
   );
+};
+
+export const ViewCounter = ({
+  componentKey,
+  data,
+  skip,
+  variant,
+  clientOnly,
+}: ViewCounterProps) => {
+  const [component, { loading }] = useComponent(componentKey, {
+    skip,
+    data,
+  });
+
+  const props = { clientOnly, component, loading };
+
+  if (variant === 'plaintext') return <ViewCounterSpan {...props} />;
+  if (variant === 'chips') return <ViewCounterChip {...props} />;
+  return <ViewCounterItem {...props} />;
 };

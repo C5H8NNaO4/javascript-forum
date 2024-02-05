@@ -237,7 +237,7 @@ const PostOverviewMeta = ({ nVotes, nAnswers, post, plainText }) => {
       {plainText ? <span>{answersStr}</span> : <Chip label={answersStr}></Chip>}
       <ViewCounter
         clientOnly
-        plainText={plainText}
+        variant="listitem"
         componentKey={post?.props?.viewCounter?.component}
         data={post?.props?.viewCounter}
       />
