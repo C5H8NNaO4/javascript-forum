@@ -202,7 +202,7 @@ const Post = (post) => {
             {post.props.tags?.length > 0 && (
               <CardContent sx={{ display: 'flex', gap: 1 }}>
                 {post.props.tags?.map((tag) => (
-                  <Chip color="info" label={tag} />
+                  <Chip size="small" color="info" label={tag} />
                 ))}
               </CardContent>
             )}
@@ -237,7 +237,7 @@ const PostOverviewMeta = ({ nVotes, nAnswers, post, plainText }) => {
       {plainText ? <span>{answersStr}</span> : <Chip label={answersStr}></Chip>}
       <ViewCounter
         clientOnly
-        variant="listitem"
+        variant={plainText ? 'plaintext' : 'listitem'}
         componentKey={post?.props?.viewCounter?.component}
         data={post?.props?.viewCounter}
       />
