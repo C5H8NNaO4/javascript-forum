@@ -11,7 +11,6 @@ import {
   Alert,
   LinearProgress,
   IconButton,
-  Popper,
   Popover,
   ClickAwayListener,
 } from '@mui/material';
@@ -28,10 +27,8 @@ import { CommunityComments } from '../../server-components/examples/Comments';
 import { useSyncedState } from '../../lib/hooks';
 import { ViewCounter } from '../../server-components/examples/ViewCounter';
 import Visibility from '@mui/icons-material/Visibility';
-import Favorite from '@mui/icons-material/Favorite';
 import {
   AddCircleOutline,
-  Pin,
   PushPin,
   PushPinOutlined,
 } from '@mui/icons-material';
@@ -138,8 +135,8 @@ const Post = ({ id }) => {
                     bodyLoading
                       ? 'warning'
                       : component?.props?.body === body
-                      ? 'success'
-                      : 'primary'
+                        ? 'success'
+                        : 'primary'
                   }
                   multiline
                   fullWidth
@@ -325,8 +322,8 @@ const Answer = ({ answer }) => {
                   loading
                     ? 'warning'
                     : component?.props?.body === body
-                    ? 'success'
-                    : 'primary'
+                      ? 'success'
+                      : 'primary'
                 }
                 multiline
                 fullWidth

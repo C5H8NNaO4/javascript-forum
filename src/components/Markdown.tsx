@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import { Link as RouterLink } from 'react-router-dom';
-import { useContext, useEffect, useRef, useState, createElement } from 'react';
+import { useContext, useEffect, useState, createElement } from 'react';
 
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
@@ -56,7 +56,7 @@ export const Markdown = ({
   center = true,
 }: MarkdownProps) => {
   const [markdown, setMarkdown] = useState<string>(children || '');
-  const { state, dispatch } = useContext(stateContext);
+  const { dispatch } = useContext(stateContext);
 
   useEffect(() => {
     if (src) {
@@ -66,10 +66,10 @@ export const Markdown = ({
           setMarkdown(text);
         });
     }
-  }, []);
+  }, [src]);
 
   const headingRenderer = (props) => {
-    const { level, children } = props;
+    const { node, children } = props;
     const text = children[0];
     if (typeof text === 'string') {
       const anchor = (text || '')
@@ -79,10 +79,10 @@ export const Markdown = ({
 
       if (preview)
         return createElement('b', { id: anchor || undefined }, children);
-      return createElement(`h${level}`, { id: anchor || undefined }, children);
+      return createElement(node.tagName, { id: anchor || undefined }, children);
     }
     if (preview) return createElement('b', {}, children);
-    return createElement(`h${level}`, {}, children);
+    return createElement(node.tagName, {}, children);
   };
 
   return (
@@ -112,26 +112,26 @@ export const Markdown = ({
           h4: headingRenderer,
           h5: headingRenderer,
           h6: headingRenderer,
-          pre: (props: any) => {
+          pre: (props) => {
             const language = (
-              props.children[0]?.props?.className || '-bash'
+              props?.children?.[0]?.props?.className || '-bash'
             ).split('-')[1];
 
             if (language === 'mermaid') {
-              return <Mermaid>{props.children[0].props.children}</Mermaid>;
+              return <Mermaid>{props?.children?.[0].props.children}</Mermaid>;
             }
 
             const child = Array.isArray(props.children)
               ? props.children[0]
               : props.children;
-              
+
             return (
               <>
                 <Box sx={{ width: '100%', display: 'flex' }}>
                   <IconButton
                     sx={{ ml: 'auto', mb: -7, color: 'white' }}
                     onClick={() => {
-                      copy(props.children[0].props.children);
+                      copy(props?.children?.[0].props.children);
                       dispatch({
                         type: Actions.SHOW_MESSAGE,
                         value: 'Copied to clipboard',
@@ -147,10 +147,10 @@ export const Markdown = ({
               </>
             );
           },
-          a: (props: any) => {
+          a: (props) => {
             return (
               <Link
-                to={props.href}
+                to={props.href || ''}
                 component={RouterLink}
                 sx={{ color: 'info.main' }}
               >
@@ -170,12 +170,12 @@ export const Markdown = ({
               </Box>
             );
           },
-          table: (props: any) => {
+          table: (props) => {
             return (
               <Table>
                 <TableHead>
                   <TableRow>
-                    {props.children[0].props.children[0].props.children?.map(
+                    {props?.children?.[0].props.children[0].props.children?.map(
                       (e) => {
                         return <TableCell>{e}</TableCell>;
                       }
@@ -183,7 +183,7 @@ export const Markdown = ({
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {props.children[1].props.children.map((row) => {
+                  {props?.children?.[1].props.children.map((row) => {
                     return (
                       <TableRow>
                         {row.props.children.map((e) => {
