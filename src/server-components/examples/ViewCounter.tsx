@@ -14,27 +14,41 @@ export type ViewCounterProps = {
   componentKey: string;
   data?: any;
   skip?: boolean;
+  plainText?: boolean;
+  clientOnly?: boolean;
 };
-export const ViewCounter = ({ componentKey, data, skip }: ViewCounterProps) => {
+export const ViewCounter = ({
+  componentKey,
+  data,
+  skip,
+  plainText,
+  clientOnly,
+}: ViewCounterProps) => {
   const [component, { loading }] = useComponent(componentKey, {
     skip,
     data,
   });
+
+  if (plainText) return `${component?.props?.clients} views`;
 
   return (
     <Tooltip title="Views" placement="left">
       <Box
         sx={{ display: 'flex', justifyContent: 'start', width: 'min-content' }}
       >
+        {!clientOnly && (
+          <ListItem dense>
+            <ListItemIcon>
+              <VisibilityIcon />
+            </ListItemIcon>
+            <ListItemText>
+              {loading ? '-' : component?.props?.views}
+            </ListItemText>
+          </ListItem>
+        )}
         <ListItem dense>
           <ListItemIcon>
-            <VisibilityIcon />
-          </ListItemIcon>
-          <ListItemText>{loading ? '-' : component?.props?.views}</ListItemText>
-        </ListItem>
-        <ListItem dense>
-          <ListItemIcon>
-            <GroupIcon />
+            {clientOnly ? <VisibilityIcon /> : <GroupIcon />}
           </ListItemIcon>
           <ListItemText>
             {loading ? '-' : component?.props?.clients}

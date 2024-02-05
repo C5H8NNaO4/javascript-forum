@@ -148,30 +148,27 @@ const Post = (post) => {
         {post?.props?.sticky && (
           <Box
             sx={{
-              width: '0px',
-              borderLeft: '4px dashed',
-              borderColor: 'warning.main',
+              width: {
+                xs: '100%',
+                md: '2px',
+              },
+              height: {
+                xs: '2px',
+                md: 'unset',
+              },
+              // borderTop: '4px dashed',
+              backgroundColor: 'info.main',
             }}
           ></Box>
         )}
-        <Grid item>
-          <FlexBox sx={{ flexDirection: 'column', gap: 1 }}>
-            <CardContent
-              sx={{ ml: 8, display: 'flex', flexDirection: 'column', gap: 1 }}
-            >
-              <Chip
-                color={sum > 0 ? 'success' : sum < 0 ? 'error' : undefined}
-                label={`${sum} votes`}
-              />
-              <Chip
-                color={nAnswers === 0 ? undefined : 'success'}
-                label={`${nAnswers} answers`}
-              ></Chip>
-              <ViewCounter
-                componentKey={post?.props?.viewCounter?.component}
-                data={post?.props?.viewCounter}
-              />
-            </CardContent>
+        <Grid item order={{ xs: 2, md: 0 }}>
+          <FlexBox sx={{ flexDirection: 'column', gap: 1, minWidth: 200 }}>
+            <PostOverviewMeta
+              plainText={false}
+              nAnswers={nAnswers}
+              nVotes={sum}
+              post={post}
+            />
           </FlexBox>
         </Grid>
         <Grid item>
@@ -213,6 +210,38 @@ const Post = (post) => {
         </Grid>
       </Grid>
     </Card>
+  );
+};
+
+const PostOverviewMeta = ({ nVotes, nAnswers, post, plainText }) => {
+  const votesStr = `${nVotes} votes`;
+  const answersStr = `${nAnswers} answers`;
+  return (
+    <CardContent
+      sx={{
+        ml: 'auto',
+        mr: {
+          xs: 'auto',
+          md: 'unset',
+        },
+        display: 'flex',
+        flexDirection: {
+          xs: 'row',
+          md: 'column',
+        },
+        gap: 1,
+        textAlign: 'right',
+      }}
+    >
+      {plainText ? <span>{votesStr}</span> : <Chip label={votesStr} />}
+      {plainText ? <span>{answersStr}</span> : <Chip label={answersStr}></Chip>}
+      <ViewCounter
+        clientOnly
+        plainText={plainText}
+        componentKey={post?.props?.viewCounter?.component}
+        data={post?.props?.viewCounter}
+      />
+    </CardContent>
   );
 };
 
