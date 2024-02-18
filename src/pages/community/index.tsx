@@ -297,7 +297,7 @@ const Header = ({ pageSize, setPageSize }) => {
 export const NewPostButton = () => {
   return (
     <Button variant="contained" color="secondary" sx={{ ml: 'auto' }}>
-      <Link to="/new" component={RouterLink}>
+      <Link to="/new" component={RouterLink} color={'#EEEEEE'}>
         Ask Question
       </Link>
     </Button>
