@@ -138,7 +138,7 @@ export const Markdown = ({
                   disablePadding
                   fetchFn={async () => {
                     const res = await fetch(
-                      `https://api.stackexchange.com/2.3/answers/${id}?order=desc&sort=activity&site=stackoverflow&filter=!nNPvSNdWme`
+                      `https://api.stackexchange.com/2.3/answers/${id}?order=desc&sort=activity&site=stackoverflow&filter=!nNPvSNdWme?key=${encodeURIComponent('IQOO7kdoZ)ST9J0b)HCfww((')}&client_id=28299`
                     );
 
                     const json = await res.json();
