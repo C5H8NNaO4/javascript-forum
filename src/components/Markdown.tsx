@@ -77,9 +77,7 @@ export const Markdown = ({
   center = true,
 }: MarkdownProps) => {
   const [markdown, setMarkdown] = useState<string>(children || '');
-  const [fetchStatus, setFetchStatus] = useState<
-    'loading' | 'loaded' | 'error' | null
-  >(null);
+
   const { dispatch } = useContext(stateContext);
 
   useEffect(() => {
@@ -174,7 +172,8 @@ export const Markdown = ({
                     return `${answer}\n<sub>- ${url}</sub>`;
                   }}
                 >
-                  {`Loading Stackoverflow answer. [${url}](${url})`}
+                  {`*See this Stackoverflow answer: [${url}](${url})` +
+                    (!fetched[id] ? '...*' : '.*')}
                 </Markdown>
               );
             }
