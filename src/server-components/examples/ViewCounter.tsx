@@ -19,7 +19,7 @@ export type ViewCounterProps = {
   variant?: 'chips' | 'plaintext' | 'listitem';
   clientOnly?: boolean;
   sx?: CardProps['sx'];
-  textColor: string;
+  textColor?: string;
 };
 
 export const ViewCounterSpan = ({ component, clientOnly }) => {
