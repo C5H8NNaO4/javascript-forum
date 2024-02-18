@@ -9,7 +9,13 @@ import TableRow from '@mui/material/TableRow';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import { Link as RouterLink } from 'react-router-dom';
-import { useContext, useEffect, useState, createElement } from 'react';
+import {
+  useContext,
+  useEffect,
+  useState,
+  createElement,
+  PropsWithChildren,
+} from 'react';
 
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
@@ -118,7 +124,7 @@ export const Markdown = ({
           h4: headingRenderer,
           h5: headingRenderer,
           h6: headingRenderer,
-          pre: (props) => {
+          pre: (props: PropsWithChildren<any>) => {
             const language = (
               props?.children?.props?.className || '-bash'
             ).split('-')[1];
