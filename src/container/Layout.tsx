@@ -23,6 +23,7 @@ import {
   ListItemIcon,
   ListItemText,
   Button,
+  LinearProgress,
   Tooltip,
 } from '@mui/material';
 import styles from './Layout.module.css';
@@ -39,14 +40,12 @@ import { SidebarNavigation } from '../components/SidebarNavigation';
 import ChatIcon from '@mui/icons-material/Chat';
 import Snackbar from '@mui/material/Snackbar';
 import HeartIcon from '@mui/icons-material/Favorite';
-import { useComponent, useLocalStorage } from '@state-less/react-client';
-import { ViewCounter } from '../server-components/examples/ViewCounter';
 import {
-  CONTACT_MAIL,
-  CONTACT_PHONE,
-  CONTACT_PHONE_URL,
-  GITHUB_CONTRIBUTE,
-} from '../lib/const';
+  authContext,
+  useComponent,
+  useLocalStorage,
+} from '@state-less/react-client';
+import { ViewCounter } from '../server-components/examples/ViewCounter';
 
 declare let gtag: Function;
 
@@ -135,19 +134,11 @@ export const Layout = () => {
     }
   }, [features?.props?.animated]);
 
-  useEffect(() => {
-    console.log('INCLUDES BG', _animated, search.includes('bg=1'));
-    if (_animated === 0 && search.includes('bg=1')) {
-      dispatch({
-        type: Actions.SET_BG,
-      });
-    }
-  }, [search, pathname, _animated]);
-
   const [cookieConsent, setCookieConsent] = useLocalStorage<boolean | null>(
     'cookie-consent',
     null
   );
+
   useEffect(() => {
     if (cookieConsent && 'gtag' in window) {
       gtag('event', 'load', { event_category: 'page' });
@@ -167,7 +158,7 @@ export const Layout = () => {
       light={SunnyBlueClouds}
       dark={DarkWaves}
       enabled={_animated === 2}
-      bg={_animated > 0}
+      bg={_animated}
     >
       <Box
         key={pathname}
@@ -280,20 +271,15 @@ export const Layout = () => {
                   md: 2,
                 },
                 mt: 16,
-                backgroundColor: 'secondary.main',
+                backgroundColor: 'primary.main',
               }}
             >
               <Typography variant="body2" color="textSecondary" align="center">
-                <Link href="https://state-less.cloud">
-                  © {new Date().getFullYear()} React Server
-                </Link>
+                <Link href="https://state-less.cloud">© 2023 React Server</Link>
               </Typography>
               <Grid container spacing={1} justifyContent="center">
                 <Grid item xs={12} sm={6} md={4} xl={2}>
-                  <Card
-                    sx={{ m: 1, mb: 0, backgroundColor: 'primary.main' }}
-                    elevation={0}
-                  >
+                  <Card sx={{ m: 1, mb: 0 }} elevation={0}>
                     <CardHeader title="Social"></CardHeader>
                     <CardContent>
                       <div className={styles.impressum}>
@@ -304,7 +290,6 @@ export const Layout = () => {
                             </ListItemIcon>
                             <ListItemText>
                               <Link
-                                color={'secondary.main'}
                                 component={RouterLink}
                                 to="https://github.com/state-less/react-server"
                               >
@@ -319,7 +304,6 @@ export const Layout = () => {
                             </ListItemIcon>
                             <ListItemText>
                               <Link
-                                color={'secondary.main'}
                                 component={RouterLink}
                                 to="https://twitter.com/statelesscloud"
                               >
@@ -333,7 +317,6 @@ export const Layout = () => {
                             </ListItemIcon>
                             <ListItemText>
                               <Link
-                                color={'secondary.main'}
                                 component={RouterLink}
                                 to="https://discord.gg/vbEhvfKPFY"
                               >
@@ -347,7 +330,6 @@ export const Layout = () => {
                             </ListItemIcon>
                             <ListItemText>
                               <Link
-                                color={'secondary.main'}
                                 component={RouterLink}
                                 to="ircs://irc.eu.libera.chat/react-server"
                               >
@@ -361,10 +343,7 @@ export const Layout = () => {
                   </Card>
                 </Grid>
                 <Grid item xs={12} sm={6} md={4} xl={2}>
-                  <Card
-                    sx={{ m: 1, mb: 0, backgroundColor: 'primary.main' }}
-                    elevation={0}
-                  >
+                  <Card sx={{ m: 1, mb: 0 }} elevation={0}>
                     <CardHeader title="Contact"></CardHeader>
                     <CardContent>
                       <div className={styles.impressum}>
@@ -375,11 +354,10 @@ export const Layout = () => {
                             </ListItemIcon>
                             <ListItemText>
                               <Link
-                                color={'secondary.main'}
                                 component={RouterLink}
-                                to={`tel://${CONTACT_PHONE_URL}`}
+                                to="tel://+4917620350106"
                               >
-                                {CONTACT_PHONE}
+                                +49 176 20350106
                               </Link>
                             </ListItemText>
                           </ListItem>
@@ -390,11 +368,10 @@ export const Layout = () => {
                             </ListItemIcon>
                             <ListItemText>
                               <Link
-                                color={'secondary.main'}
                                 component={RouterLink}
-                                to={`mailto:${CONTACT_MAIL}`}
+                                to="mailto:moritz.roessler@gmail.com"
                               >
-                                {CONTACT_MAIL}
+                                moritz.roessler@gmail.com
                               </Link>
                             </ListItemText>
                           </ListItem>
@@ -406,7 +383,6 @@ export const Layout = () => {
                 <Grid item xs={12} sm={6} md={4} xl={2}>
                   <Card
                     sx={{
-                      backgroundColor: 'primary.main',
                       marginTop: 1,
                       boxShadow: { xs: '10px 0px 8px 1px', sm: 'none' },
                     }}
@@ -420,11 +396,7 @@ export const Layout = () => {
                               <QuestionMarkIcon />
                             </ListItemIcon>
                             <ListItemText>
-                              <Link
-                                component={RouterLink}
-                                to="/faq"
-                                color={'secondary.main'}
-                              >
+                              <Link component={RouterLink} to="/faq">
                                 FAQ
                               </Link>
                             </ListItemText>
@@ -434,12 +406,8 @@ export const Layout = () => {
                               <GroupsIcon />
                             </ListItemIcon>
                             <ListItemText>
-                              <Link
-                                component={RouterLink}
-                                to={`${GITHUB_CONTRIBUTE}`}
-                                color={'secondary.main'}
-                              >
-                                Contribute
+                              <Link component={RouterLink} to="/collaborating">
+                                Collaborate
                               </Link>
                             </ListItemText>
                           </ListItem>
@@ -451,13 +419,12 @@ export const Layout = () => {
                               <Link
                                 component={RouterLink}
                                 to="https://github.com/sponsors/state-less"
-                                color={'secondary.main'}
                               >
                                 Sponsor
                               </Link>
                             </ListItemText>
                           </ListItem>
-                          <ViewCounter componentKey="javascript-forum-views" />
+                          <ViewCounter componentKey="lists-views" />
                         </List>
                       </div>
                     </CardContent>
