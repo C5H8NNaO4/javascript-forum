@@ -2,6 +2,8 @@ import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
 } from '@mui/material/styles';
+import { useContext } from 'react';
+import { stateContext } from './StateProvider';
 
 declare module '@mui/material/styles' {
   interface Theme {
@@ -28,6 +30,22 @@ const theme = createTheme({
   },
 });
 
+const bgTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#050819', //'#F66528',
+    },
+    secondary: {
+      main: '#54909A', //'#FDD804',
+    },
+  },
+});
 export const ThemeProvider = ({ children }) => {
-  return <MUIThemeProvider theme={theme}>{children}</MUIThemeProvider>;
+  const { state } = useContext(stateContext);
+  const bg = state.animatedBackground;
+  return (
+    <MUIThemeProvider theme={bg > 2 ? bgTheme : theme}>
+      {children}
+    </MUIThemeProvider>
+  );
 };

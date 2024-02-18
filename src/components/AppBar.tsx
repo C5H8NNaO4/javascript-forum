@@ -51,7 +51,7 @@ export default function ButtonAppBar() {
             <Link component={RouterLink} to="/" sx={{ color: 'white' }}>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 {navigation.find((nav) => nav[0] === pathname)?.[3] ||
-                  'React Server'}
+                  (pathname.includes('/post-') ? 'Post' : 'React Server')}
               </Typography>
             </Link>
           </Box>
