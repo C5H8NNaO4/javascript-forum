@@ -147,7 +147,7 @@ export const Markdown = ({
                     return `${answer}\n<sub>- ${url}</sub>`;
                   }}
                 >
-                  Loading Stackoverflow answer.
+                  {`Loading Stackoverflow answer. [${url}](${url})`}
                 </Markdown>
               );
             }
