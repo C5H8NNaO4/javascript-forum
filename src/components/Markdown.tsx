@@ -30,6 +30,7 @@ type MarkdownProps = {
   small?: boolean;
   preview?: boolean;
   center?: boolean;
+  fetchFn?: () => Promise<string>;
 };
 
 mermaid.initialize({
@@ -49,6 +50,7 @@ const Mermaid = (props) => {
 export const Markdown = ({
   children,
   src,
+  fetchFn,
   disablePadding,
   optimisticHeight = '0px',
   small = false,
@@ -59,14 +61,18 @@ export const Markdown = ({
   const { dispatch } = useContext(stateContext);
 
   useEffect(() => {
-    if (src) {
+    if (src && !fetchFn) {
       fetch(src)
         .then((response) => response.text())
         .then((text) => {
           setMarkdown(text);
         });
+    } else if (fetchFn) {
+      fetchFn().then((text) => {
+        setMarkdown(text);
+      });
     }
-  }, [src]);
+  }, [src, fetchFn]);
 
   const headingRenderer = (props) => {
     const { node, children } = props;
@@ -114,8 +120,31 @@ export const Markdown = ({
           h6: headingRenderer,
           pre: (props) => {
             const language = (
-              props?.children?.[0]?.props?.className || '-bash'
+              props?.children?.props?.className || '-bash'
             ).split('-')[1];
+
+            if (language === 'stackoverflow') {
+              const url = props?.children?.props?.children;
+              const id = url.split('/').at(-2);
+              return (
+                <Markdown
+                  center={false}
+                  disablePadding
+                  fetchFn={async () => {
+                    const res = await fetch(
+                      `https://api.stackexchange.com/2.3/answers/${id}?order=desc&sort=activity&site=stackoverflow&filter=!nNPvSNdWme`
+                    );
+
+                    const json = await res.json();
+                    const answer = json?.items?.[0]?.body;
+
+                    return `${answer}\n<sub>- ${url}</sub>`;
+                  }}
+                >
+                  Loading Stackoverflow answer.
+                </Markdown>
+              );
+            }
 
             if (language === 'mermaid') {
               return <Mermaid>{props?.children?.[0].props.children}</Mermaid>;
@@ -198,7 +227,7 @@ export const Markdown = ({
           },
         }}
       >
-        {src ? markdown : children}
+        {src || fetchFn ? markdown : children}
       </ReactMarkdown>
     </div>
   );
