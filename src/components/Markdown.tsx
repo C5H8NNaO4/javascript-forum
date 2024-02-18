@@ -15,6 +15,7 @@ import {
   useState,
   createElement,
   PropsWithChildren,
+  useCallback,
 } from 'react';
 
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -37,6 +38,7 @@ type MarkdownProps = {
   preview?: boolean;
   center?: boolean;
   fetchFn?: () => Promise<string>;
+  id?: string;
 };
 
 mermaid.initialize({
@@ -53,8 +55,19 @@ const Mermaid = (props) => {
 
   return <div className="mermaid">{props.children}</div>;
 };
+
+const map = new Map();
+export const memoize = (fn, id) => {
+  if (map.has(id)) return map.get(id);
+  map.set(id, fn);
+  return map.get(id);
+};
+
+const fetched = new Map();
+
 export const Markdown = ({
   children,
+  id,
   src,
   fetchFn,
   disablePadding,
@@ -64,21 +77,33 @@ export const Markdown = ({
   center = true,
 }: MarkdownProps) => {
   const [markdown, setMarkdown] = useState<string>(children || '');
+  const [fetchStatus, setFetchStatus] = useState<
+    'loading' | 'loaded' | 'error' | null
+  >(null);
   const { dispatch } = useContext(stateContext);
 
   useEffect(() => {
+    if (fetched?.[id || ''] > 0) return;
+
     if (src && !fetchFn) {
       fetch(src)
         .then((response) => response.text())
         .then((text) => {
           setMarkdown(text);
         });
-    } else if (fetchFn) {
-      fetchFn().then((text) => {
-        setMarkdown(text);
-      });
+    } else if (fetchFn && id !== undefined) {
+      fetched[id] = 1;
+      fetchFn?.()
+        .then((text) => {
+          fetched[id] = 2;
+          setMarkdown(text);
+        })
+        .catch((e) => {
+          fetched[id] = 3;
+          setMarkdown(children);
+        });
     }
-  }, [src, fetchFn]);
+  }, []);
 
   const headingRenderer = (props) => {
     const { node, children } = props;
@@ -134,6 +159,8 @@ export const Markdown = ({
               const id = url.split('/').at(-2);
               return (
                 <Markdown
+                  id={id}
+                  key={id}
                   center={false}
                   disablePadding
                   fetchFn={async () => {
