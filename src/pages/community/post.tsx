@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { useComponent, useLocalStorage } from '@state-less/react-client';
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 import Visibility from '@mui/icons-material/Visibility';
 
 import { CommunityComments } from '../../server-components/examples/Comments';
@@ -27,6 +27,7 @@ import {
   ContentEditor,
   PostActions,
 } from '../../server-components/ContentEditor';
+import { Actions, stateContext } from '../../provider/StateProvider';
 
 import { NewPost } from './newPost';
 
@@ -48,6 +49,7 @@ export const PostsPage = () => {
 
 const DRAFT = true;
 const Post = ({ id }) => {
+  const { state, dispatch } = useContext(stateContext);
   const [_, setSkip] = useState(false);
   const [component, { error, loading }] = useComponent(id);
 
@@ -69,6 +71,27 @@ const Post = ({ id }) => {
     }
   );
 
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!ref?.current) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          dispatch({ type: Actions.SET_LAST_BC, value: true });
+        } else {
+          dispatch({ type: Actions.SET_LAST_BC, value: false });
+        }
+      },
+      {
+        root: document.body,
+        rootMargin: '0px 0px -100%',
+        threshold: 0.0,
+      }
+    );
+    obs.observe(ref?.current);
+  }, [ref?.current]);
+
   const [body, setBody] = useState(bodyServer);
   useEffect(() => {
     setBody(bodyServer);
@@ -82,7 +105,7 @@ const Post = ({ id }) => {
       </>
     );
   return (
-    <>
+    <div ref={ref}>
       <FlexBox
         sx={{
           alignItems: 'center',
@@ -171,7 +194,7 @@ const Post = ({ id }) => {
         ?.map((answer) => {
           return <Answer answer={answer} />;
         })}
-    </>
+    </div>
   );
 };
 

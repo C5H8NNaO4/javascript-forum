@@ -77,7 +77,7 @@ export default function ButtonAppBar() {
                       Forum
                     </Link>
                   );
-                })}
+                }).slice(0, state?.showBC ? 3 : 1)}
               </Typography>
             </Link>
           </Box>
