@@ -82,16 +82,30 @@ export const Markdown = ({
   center = true,
   landing = false,
   id = null,
+  fetchFn,
 }: MarkdownProps) => {
   const [markdown, setMarkdown] = useState<string>(children || '');
-  const { state, dispatch } = useContext(stateContext);
+  const { dispatch } = useContext(stateContext);
 
   useEffect(() => {
-    if (src) {
+    if (fetched?.[id || ''] > 0) return;
+
+    if (src && !fetchFn) {
       fetch(src)
         .then((response) => response.text())
         .then((text) => {
           setMarkdown(text);
+        });
+    } else if (fetchFn && id !== undefined) {
+      fetched[id || ''] = 1;
+      fetchFn?.()
+        .then((text) => {
+          fetched[id || ''] = 2;
+          setMarkdown(text);
+        })
+        .catch((e) => {
+          fetched[id] = 3;
+          setMarkdown(children);
         });
     }
   }, []);
@@ -283,7 +297,7 @@ export const Markdown = ({
           },
         }}
       >
-        {src ? markdown : children}
+        {src || fetchFn ? markdown : children}
       </ReactMarkdown>
     </div>
   );
