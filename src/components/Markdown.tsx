@@ -192,6 +192,15 @@ export const Markdown = ({
               props?.children?.props?.className || '-bash'
             ).split('-')[1];
 
+            if (language === 'github') {
+              const url = props?.children?.props?.children;
+
+              return (
+                <Markdown src={url} key={url} center={false} disablePadding>
+                  {`Loading Markdown from Github: ${url}`}
+                </Markdown>
+              );
+            }
             if (language === 'stackoverflow') {
               const url = props?.children?.props?.children;
               const id = url.split('/').at(-2);
