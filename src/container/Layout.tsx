@@ -46,6 +46,7 @@ import {
   useLocalStorage,
 } from '@state-less/react-client';
 import { ViewCounter } from '../server-components/examples/ViewCounter';
+import { CONTACT_MAIL, GITHUB_CONTRIBUTE } from '../lib/const';
 
 declare let gtag: Function;
 
@@ -358,28 +359,14 @@ export const Layout = () => {
                         <List disablePadding>
                           <ListItem dense>
                             <ListItemIcon>
-                              <PhoneIcon />
-                            </ListItemIcon>
-                            <ListItemText>
-                              <Link
-                                component={RouterLink}
-                                to="tel://+4917620350106"
-                              >
-                                +49 176 20350106
-                              </Link>
-                            </ListItemText>
-                          </ListItem>
-
-                          <ListItem dense>
-                            <ListItemIcon>
                               <EmailIcon />
                             </ListItemIcon>
                             <ListItemText>
                               <Link
                                 component={RouterLink}
-                                to="mailto:moritz.roessler@gmail.com"
+                                to={`mailto:${CONTACT_MAIL}`}
                               >
-                                moritz.roessler@gmail.com
+                                {CONTACT_MAIL}
                               </Link>
                             </ListItemText>
                           </ListItem>
@@ -415,8 +402,11 @@ export const Layout = () => {
                               <GroupsIcon />
                             </ListItemIcon>
                             <ListItemText>
-                              <Link component={RouterLink} to="/collaborating">
-                                Collaborate
+                              <Link
+                                component={RouterLink}
+                                to={GITHUB_CONTRIBUTE}
+                              >
+                                Contribute
                               </Link>
                             </ListItemText>
                           </ListItem>
