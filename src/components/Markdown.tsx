@@ -103,12 +103,12 @@ export const Markdown = ({
           fetched[id || ''] = 2;
           setMarkdown(text);
         })
-        .catch((e) => {
+        .catch(() => {
           fetched[id] = 3;
           setMarkdown(children);
         });
     }
-  }, []);
+  }, [children, fetchFn, id, src]);
 
   const headingRenderer = (props) => {
     const { children } = props;
