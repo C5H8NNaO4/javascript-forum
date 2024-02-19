@@ -11,12 +11,23 @@ import { useRef, useState } from 'react';
 
 export const ReactionIcons = {
   love: () => <Box sx={{ fontSize: 18, ml: 0.5 }}>❤️</Box>,
+  smile: () => <Box sx={{ fontSize: 18, ml: 0.5 }}>😊</Box>,
   laugh: () => <Box sx={{ fontSize: 18, ml: 0.5 }}>😂</Box>,
+  nerd: () => <Box sx={{ fontSize: 18, ml: 0.5 }}>🤓</Box>,
+  'smile-hearts': () => <Box sx={{ fontSize: 18, ml: 0.5 }}>🥰</Box>,
   'thumbs-up': () => <Box sx={{ fontSize: 18, ml: 0.5 }}>👍</Box>,
   'thumbs-down': () => <Box sx={{ fontSize: 18, ml: 0.5 }}>👎</Box>,
 };
 
-const availableReactions = ['love', 'laugh', 'thumbs-up', 'thumbs-down'];
+const availableReactions = [
+  'love',
+  'laugh',
+  'smile',
+  'nerd',
+  'smile-hearts',
+  'thumbs-up',
+  'thumbs-down',
+];
 
 export const Reactions = ({ data }) => {
   const [component, { error, refetch }] = useComponent(data?.component, {
@@ -81,7 +92,7 @@ const ReactionPopper = ({ anchor, id, onClose, react }) => {
       <ClickAwayListener onClickAway={onClose}>
         <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
           {availableReactions.map((reaction) => {
-            const Icon = Icons[reaction];
+            const Icon = ReactionIcons[reaction];
             return (
               <IconButton onClick={() => react(reaction)}>
                 {<Icon />}
