@@ -15,7 +15,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.6",
     "@mui/material": "^5.15.6",
-    "@state-less/react-client": "^2.0.12",
+    "@state-less/react-client": "state-less/react-client",
     "copy-to-clipboard": "^3.3.3",
     "mermaid": "^10.7.0",
     "react": "^18.2.0",
