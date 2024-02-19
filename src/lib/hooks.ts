@@ -6,11 +6,11 @@ export const useSyncedState = (
   {
     draft,
     successFn,
-  }: { draft?: boolean; successFn?: (value?: any) => void } = {
+  }: { draft?: boolean; successFn?: (value?: unknown) => void } = {
     draft: false,
   }
 ) => {
-  const timeout = useRef<any>(null);
+  const timeout = useRef<number | NodeJS.Timeout | null>(null);
   const timestampSave = useRef(0);
   const timestampLocal = useRef(0);
   const [localValue, setLocalValue] = useState(defValue);
@@ -19,7 +19,7 @@ export const useSyncedState = (
   const setValue = async (value) => {
     setLocalValue(value);
     timestampLocal.current = +new Date();
-    clearTimeout(timeout.current);
+    if (timeout.current) clearTimeout(timeout.current);
     const save = async () => {
       setLoading(true);
       timestampSave.current = +new Date();

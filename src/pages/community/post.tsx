@@ -11,29 +11,28 @@ import {
   Alert,
   LinearProgress,
   IconButton,
-  Popover,
-  ClickAwayListener,
 } from '@mui/material';
-
-import { Markdown } from '../../components/Markdown';
-import { FlexBox } from '../../components/FlexBox';
 import { useComponent, useLocalStorage } from '@state-less/react-client';
-import { UpDownButtons } from '../../server-components/examples/VotingApp';
 import { useParams } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
-import { NewPost } from './newPost';
-import { NewPostButton } from '.';
+import { useEffect, useState } from 'react';
+import Visibility from '@mui/icons-material/Visibility';
+
 import { CommunityComments } from '../../server-components/examples/Comments';
 import { useSyncedState } from '../../lib/hooks';
 import { ViewCounter } from '../../server-components/examples/ViewCounter';
-import Visibility from '@mui/icons-material/Visibility';
+import { UpDownButtons } from '../../server-components/examples/VotingApp';
+import { FlexBox } from '../../components/FlexBox';
 import {
   AnswerActions,
   ContentEditor,
   PostActions,
 } from '../../server-components/ContentEditor';
 
-export const PostsPage = (props) => {
+import { NewPost } from './newPost';
+
+import { NewPostButton } from '.';
+
+export const PostsPage = () => {
   const params = useParams();
   if (params.post === 'new') {
     return <NewPost />;
@@ -49,13 +48,13 @@ export const PostsPage = (props) => {
 
 const DRAFT = true;
 const Post = ({ id }) => {
-  const [skip, setSkip] = useState(false);
-  const [component, { error, loading, refetch }] = useComponent(id);
+  const [_, setSkip] = useState(false);
+  const [component, { error, loading }] = useComponent(id);
 
   useEffect(() => {
     /* Skip recreated ViewCounter component as long as the post is in the cache*/
-    if (component?.props) setSkip(true);
-  }, [component?.props]);
+    if (component?.props) setSkip?.(true);
+  }, [component?.props, setSkip]);
 
   const [edit, setEdit] = useState(0);
   const [showDeleted, setShowDeleted] = useLocalStorage(
@@ -177,7 +176,7 @@ const Post = ({ id }) => {
 };
 
 const Answer = ({ answer }) => {
-  const [component, { error, refetch }] = useComponent(answer?.component, {
+  const [component] = useComponent(answer?.component, {
     data: answer,
   });
   const [edit, setEdit] = useState(0);
@@ -231,7 +230,7 @@ const Answer = ({ answer }) => {
 };
 
 const ComposeAnswer = ({ id }) => {
-  const [component, { error, loading }] = useComponent(id);
+  const [component] = useComponent(id);
   const [body, setBody] = useState('');
   return (
     <Card sx={{ p: 2 }}>

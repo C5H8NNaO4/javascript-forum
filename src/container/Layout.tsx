@@ -1,12 +1,4 @@
 import { Routes } from 'react-router';
-import ButtonAppBar from '../components/AppBar';
-import {
-  DarkWaves,
-  SunnyBlueClouds,
-  VantaBackground,
-} from '../components/Background';
-import { Actions, stateContext } from '../provider/StateProvider';
-import { routes } from '../routes';
 import { useContext, useEffect, useRef, useState } from 'react';
 import {
   Paper,
@@ -23,32 +15,39 @@ import {
   ListItemIcon,
   ListItemText,
   Button,
-  LinearProgress,
   Tooltip,
 } from '@mui/material';
-import styles from './Layout.module.css';
 import { Link as RouterLink } from 'react-router-dom';
-
 import GitHubIcon from '@mui/icons-material/GitHub';
 import EmailIcon from '@mui/icons-material/Email';
-import PhoneIcon from '@mui/icons-material/Phone';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import GroupsIcon from '@mui/icons-material/Group';
 import { useLocation } from 'react-router-dom';
-import { SidebarNavigation } from '../components/SidebarNavigation';
 import ChatIcon from '@mui/icons-material/Chat';
 import Snackbar from '@mui/material/Snackbar';
 import HeartIcon from '@mui/icons-material/Favorite';
+import { useComponent, useLocalStorage } from '@state-less/react-client';
+
+import { SidebarNavigation } from '../components/SidebarNavigation';
+import { routes } from '../routes';
+import { Actions, stateContext } from '../provider/StateProvider';
 import {
-  authContext,
-  useComponent,
-  useLocalStorage,
-} from '@state-less/react-client';
+  DarkWaves,
+  SunnyBlueClouds,
+  VantaBackground,
+} from '../components/Background';
+import ButtonAppBar from '../components/AppBar';
 import { ViewCounter } from '../server-components/examples/ViewCounter';
 import { CONTACT_MAIL, GITHUB_CONTRIBUTE } from '../lib/const';
 
-declare let gtag: Function;
+import styles from './Layout.module.css';
+
+declare let gtag: (
+  _: string,
+  __: string,
+  ___: { event_category: string }
+) => void;
 
 const messages = [
   'Building Layout',
@@ -61,7 +60,7 @@ export const PrankButton = ({ children }) => {
   const [open, setOpen] = useState(false);
   const [move, setMove] = useState(false);
   const [moved, setMoved] = useState(false);
-  const [style, setStyle] = useState({} as any);
+  const [style, setStyle] = useState<Record<string, string>>({});
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -77,7 +76,7 @@ export const PrankButton = ({ children }) => {
         transition: 'transform 1s ease-out',
       });
     }
-  });
+  }, [setStyle, move]);
   return (
     <Tooltip ref={ref} open={open} title="Just kidding!" style={style}>
       <Box
@@ -107,11 +106,11 @@ export const PrankButton = ({ children }) => {
 };
 export const Layout = () => {
   const { state, dispatch } = useContext(stateContext);
-  const [features, { loading: featuresLoading }] = useComponent('features');
-  const { pathname, search } = useLocation();
+  const [features] = useComponent('features');
+  const { pathname } = useLocation();
   // const [_animated, setAnim] = useState(0);
   const _animated = state.animatedBackground || 0;
-
+  const hasGtag = 'gtag' in window;
   const [time, setTime] = useState(0);
 
   useEffect(() => {
@@ -133,7 +132,7 @@ export const Layout = () => {
         type: Actions.TOGGLE_ANIMATED_BACKGROUND,
       });
     }
-  }, [features?.props?.animated]);
+  }, [features?.props?.animated, dispatch, state.animatedBackground]);
 
   const [cookieConsent, setCookieConsent] = useLocalStorage<boolean | null>(
     'cookie-consent',
@@ -152,7 +151,7 @@ export const Layout = () => {
           };
       }, 0);
     }
-  }, [pathname, cookieConsent, 'gtag' in window]);
+  }, [pathname, cookieConsent, hasGtag]);
 
   return (
     <VantaBackground

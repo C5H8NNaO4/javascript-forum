@@ -15,17 +15,17 @@ import {
   MenuItem,
   Select,
 } from '@mui/material';
+import { useComponent, useLocalStorage } from '@state-less/react-client';
+import { Link as RouterLink } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 import { Markdown } from '../../components/Markdown';
 import { FlexBox } from '../../components/FlexBox';
-import { useComponent, useLocalStorage } from '@state-less/react-client';
 import { calc } from '../../server-components/examples/VotingApp';
-import { Link as RouterLink } from 'react-router-dom';
-import { useEffect, useMemo, useState } from 'react';
 import { PAGE_SIZE_POSTS, PAGE_START } from '../../lib/const';
 import { ViewCounter } from '../../server-components/examples/ViewCounter';
 import { FORUM_BASE_PATH, FORUM_KEY } from '../../lib/config';
-import { createPortal } from 'react-dom';
 
 export const CommunityPage = () => {
   const [page, setPage] = useState(PAGE_START);

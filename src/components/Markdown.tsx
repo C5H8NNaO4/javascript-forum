@@ -1,6 +1,5 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -16,17 +15,16 @@ import {
   createElement,
   PropsWithChildren,
 } from 'react';
-
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { IconButton, List, ListItem, ListItemText } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import copy from 'copy-to-clipboard';
-import { Actions, stateContext } from '../provider/StateProvider';
 import rehypeRaw from 'rehype-raw';
 import mermaid from 'mermaid';
 import clsx from 'clsx';
+
+import { Actions, stateContext } from '../provider/StateProvider';
 
 type MarkdownProps = {
   children: string;
@@ -113,7 +111,7 @@ export const Markdown = ({
           setMarkdown(children);
         });
     }
-  }, [children, fetchFn, id, src]);
+  }, [children, fetchFn, id, src, markdown]);
 
   const headingRenderer = (props) => {
     const { children } = props;

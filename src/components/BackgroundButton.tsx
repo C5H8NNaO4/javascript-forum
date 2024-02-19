@@ -1,19 +1,20 @@
 import { useContext, useState } from 'react';
-import { Actions, stateContext } from '../provider/StateProvider';
 import {
   Box,
   ClickAwayListener,
   Grid,
   IconButton,
-  Paper,
   Popover,
 } from '@mui/material';
-import { SunnyBlueClouds, VantaBackground } from './Background';
 import Wallpaper from '@mui/icons-material/Wallpaper';
+
+import { Actions, stateContext } from '../provider/StateProvider';
+
+import { SunnyBlueClouds, VantaBackground } from './Background';
 
 export const BackgroundButton = () => {
   const { state } = useContext(stateContext);
-  const [anchor, setAnchor] = useState(null);
+  const [anchor, setAnchor] = useState<EventTarget | null>(null);
   return (
     <>
       <IconButton
@@ -22,7 +23,7 @@ export const BackgroundButton = () => {
           if (anchor) {
             setAnchor(null);
           } else {
-            setAnchor(e.target as any);
+            setAnchor(e.target);
           }
         }}
       >

@@ -5,12 +5,14 @@ import {
   Grid,
   TextField,
 } from '@mui/material';
-import { Markdown } from '../components/Markdown';
-import { useRef, useState } from 'react';
-import { Reactions } from './Reactions';
+import { useRef } from 'react';
 import { PushPin, PushPinOutlined } from '@mui/icons-material';
 
-export const PostActions = ({ component, edit, setEdit, draft }) => {
+import { Markdown } from '../components/Markdown';
+
+import { Reactions } from './Reactions';
+
+export const PostActions = ({ component, edit, setEdit, draft: _ }) => {
   const editTitle = edit === 2 ? 'Save' : edit === 1 ? 'Ok' : 'Edit';
 
   return (
@@ -114,9 +116,9 @@ export const ContentEditor = ({
   body,
   setBody,
   edit,
-  setEdit,
   loading,
-  draft,
+  draft: _,
+  setEdit: __,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);

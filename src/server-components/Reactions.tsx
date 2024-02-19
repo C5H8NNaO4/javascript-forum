@@ -50,7 +50,7 @@ const availableReactions = [
 ];
 
 export const Reactions = ({ data }) => {
-  const [component, { error, refetch }] = useComponent(data?.component, {
+  const [component] = useComponent(data?.component, {
     data,
   });
   const { voted, reactions } = component?.props || {};
@@ -78,7 +78,7 @@ export const Reactions = ({ data }) => {
         <IconButton
           ref={iconButtonRef}
           color={anchor ? 'success' : 'default'}
-          onClick={(e) => setAnchor(!anchor)}
+          onClick={() => setAnchor(!anchor)}
         >
           {<AddCircleOutline />}
         </IconButton>
@@ -122,7 +122,7 @@ const ReactionPopper = ({ anchor, id, onClose, react }) => {
           <Tabs
             value={group}
             indicatorColor="primary"
-            onClick={(e) => setGroup(null)}
+            onClick={() => setGroup(null)}
             onChange={(e, v) => {
               e.stopPropagation();
               setGroup(v);
