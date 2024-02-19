@@ -5,12 +5,16 @@ import {
   ClickAwayListener,
   IconButton,
   Popover,
+  Tab,
+  Tabs,
+  TextField,
 } from '@mui/material';
 import { useComponent } from '@state-less/react-client';
 import { useRef, useState } from 'react';
 
 export const ReactionIcons = {
   love: () => <Box sx={{ fontSize: 18, ml: 0.5 }}>❤️</Box>,
+  clap: () => <Box sx={{ fontSize: 18, ml: 0.5 }}>👏</Box>,
   smile: () => <Box sx={{ fontSize: 18, ml: 0.5 }}>😊</Box>,
   laugh: () => <Box sx={{ fontSize: 18, ml: 0.5 }}>😂</Box>,
   nerd: () => <Box sx={{ fontSize: 18, ml: 0.5 }}>🤓</Box>,
@@ -19,14 +23,30 @@ export const ReactionIcons = {
   'thumbs-down': () => <Box sx={{ fontSize: 18, ml: 0.5 }}>👎</Box>,
 };
 
+const groups = {
+  smileys: ['laugh', 'smile', 'nerd', 'smile-hearts'],
+  hands: ['thumbs-up', 'thumbs-down', 'clap'],
+  emotions: ['heart', 'love', 'laugh', 'smile'],
+};
+const reactionTags = {
+  love: ['love', 'heart'],
+  'thumbs-up': ['thumb', 'up', 'like', 'hand'],
+  'thumbs-down': ['thumb', 'down', 'like', 'hand'],
+  clap: ['clap', 'hand'],
+  laugh: ['laugh', 'smile'],
+  smile: ['smile'],
+  nerd: ['nerd', 'smile'],
+  'smile-hearts': ['smile', 'heart'],
+};
 const availableReactions = [
   'love',
+  'thumbs-up',
+  'thumbs-down',
+  'clap',
   'laugh',
   'smile',
   'nerd',
   'smile-hearts',
-  'thumbs-up',
-  'thumbs-down',
 ];
 
 export const Reactions = ({ data }) => {
@@ -74,6 +94,8 @@ export const Reactions = ({ data }) => {
 };
 
 const ReactionPopper = ({ anchor, id, onClose, react }) => {
+  const [search, setSearch] = useState<string | null>(null);
+  const [group, setGroup] = useState<string | null>(null);
   return !anchor ? null : (
     <Popover
       id={id}
@@ -91,14 +113,58 @@ const ReactionPopper = ({ anchor, id, onClose, react }) => {
     >
       <ClickAwayListener onClickAway={onClose}>
         <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
-          {availableReactions.map((reaction) => {
-            const Icon = ReactionIcons[reaction];
-            return (
-              <IconButton onClick={() => react(reaction)}>
-                {<Icon />}
-              </IconButton>
-            );
-          })}
+          <TextField
+            size="small"
+            value={search}
+            placeholder="Search..."
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <Tabs
+            value={group}
+            indicatorColor="primary"
+            onClick={(e) => setGroup(null)}
+            onChange={(e, v) => {
+              e.stopPropagation();
+              setGroup(v);
+            }}
+          >
+            <Tab sx={{ minWidth: '40px' }} value={'smileys'} icon={'🙂'}></Tab>
+            <Tab sx={{ minWidth: '40px' }} value={'hands'} icon={'🤚'}></Tab>
+            <Tab sx={{ minWidth: '40px' }} value={'emotions'} icon={'❤️'}></Tab>
+          </Tabs>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(5, 40px)' }}>
+            {availableReactions
+              .filter((reaction) => {
+                return reactionTags[reaction]?.some((tag) => {
+                  if (!search) {
+                    if (group) {
+                      return groups[group]?.includes(reaction);
+                    }
+                    return true;
+                  }
+                  if (
+                    search
+                      .toLowerCase()
+                      .split(' ')
+                      .some((word) => word && tag.includes(word))
+                  ) {
+                    return true;
+                  }
+                  return false;
+                });
+              })
+              .map((reaction) => {
+                const Icon = ReactionIcons[reaction];
+                return (
+                  <IconButton
+                    onClick={() => react(reaction)}
+                    sx={{ pl: '4px' }}
+                  >
+                    {<Icon />}
+                  </IconButton>
+                );
+              })}
+          </Box>
         </Box>
       </ClickAwayListener>
     </Popover>
