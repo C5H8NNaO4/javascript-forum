@@ -196,7 +196,7 @@ export const Markdown = ({
               const url = props?.children?.props?.children;
 
               return (
-                <Markdown src={url} key={url} center={false} disablePadding>
+                <Markdown src={url} key={url} center={false}>
                   {`Loading Markdown from Github: ${url}`}
                 </Markdown>
               );
