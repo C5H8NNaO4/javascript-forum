@@ -221,15 +221,15 @@ const PostOverviewMeta = ({ nVotes, nAnswers, post, plainText }) => {
       {post?.props?.canDelete && (
         <Chip
           variant="outlined"
-          sx={{
-            backgroundColor: post.props.deleted
-              ? 'error.main'
+          color={
+            post.props.deleted
+              ? 'error'
               : post.props.locked
-                ? 'warning.main'
+                ? 'warning'
                 : post.props.approved
-                  ? 'success.main'
-                  : undefined,
-          }}
+                  ? 'success'
+                  : undefined
+          }
           label={['deleted', 'locked', 'approved']
             .filter((k) => !!post.props[k])
             .join('. ')}
