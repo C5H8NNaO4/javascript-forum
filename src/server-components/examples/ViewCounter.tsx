@@ -81,7 +81,13 @@ export const ViewCounterItem = ({
           </ListItemIcon>
           <ListItemText
             sx={{ color: textColor }}
-            primary={loading ? '-' : component?.props?.views}
+            primary={
+              loading
+                ? '-'
+                : clientOnly
+                  ? component?.props?.views
+                  : component?.props?.clients
+            }
           />
         </ListItem>
       </Box>
