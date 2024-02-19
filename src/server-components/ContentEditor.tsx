@@ -6,7 +6,7 @@ import {
   TextField,
 } from '@mui/material';
 import { Markdown } from '../components/Markdown';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Reactions } from './Reactions';
 import { PushPin, PushPinOutlined } from '@mui/icons-material';
 
@@ -118,6 +118,9 @@ export const ContentEditor = ({
   loading,
   draft,
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
   return (
     <>
       <Grid container>
@@ -126,6 +129,23 @@ export const ContentEditor = ({
             <CardContent sx={{ flex: 1 }}>
               {edit && !component?.props?.deleted && (
                 <TextField
+                  inputRef={inputRef}
+                  inputProps={{
+                    onScroll: () => {
+                      const scrollPrc =
+                        (1 /
+                          (inputRef?.current?.getBoundingClientRect()?.height ||
+                            0)) *
+                        (inputRef?.current?.scrollTop || 0);
+                      const contentTop =
+                        (contentRef?.current?.getBoundingClientRect()?.height ||
+                          0) * scrollPrc;
+
+                      contentRef?.current?.scrollTo({
+                        top: contentTop,
+                      });
+                    },
+                  }}
                   color={
                     loading
                       ? 'warning'
@@ -146,18 +166,17 @@ export const ContentEditor = ({
                 ></TextField>
               )}
             </CardContent>
-            {draft && (
-              <SaveButton
-                component={component}
-                edit={edit}
-                setEdit={setEdit}
-                title={'Save'}
-              />
-            )}
           </Grid>
         )}
         <Grid item xs={edit ? 12 : 12} md={edit ? 5 : 12}>
-          <CardContent sx={{ flex: 1 }}>
+          <CardContent
+            ref={contentRef}
+            sx={{
+              flex: 1,
+              maxHeight: edit ? (window.innerHeight - 120) / 1.5 : 'unset',
+              overflowY: 'scroll',
+            }}
+          >
             {<Markdown center={false}>{body}</Markdown>}
           </CardContent>
         </Grid>
