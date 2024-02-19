@@ -12,7 +12,6 @@ import { Link as RouterLink } from 'react-router-dom';
 import {
   useContext,
   useEffect,
-  useRef,
   useState,
   createElement,
   PropsWithChildren,
@@ -21,13 +20,7 @@ import {
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import {
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
-} from '@mui/material';
+import { IconButton, List, ListItem, ListItemText } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import copy from 'copy-to-clipboard';
 import { Actions, stateContext } from '../provider/StateProvider';
@@ -46,6 +39,13 @@ type MarkdownProps = {
   landing?: boolean;
   id?: null | string;
   fetchFn?: () => Promise<any>;
+};
+
+const quote = (str) => {
+  return str
+    .split('\n')
+    .map((line) => '> ' + line)
+    .join('\n');
 };
 
 mermaid.initialize({
@@ -211,7 +211,7 @@ export const Markdown = ({
                     const json = await res.json();
                     const answer = json?.items?.[0]?.body;
 
-                    return `${answer}\n<sub>- ${url}</sub>`;
+                    return `${quote(answer)}\n<sub>- ${url}</sub>`;
                   }}
                 >
                   {`*See this Stackoverflow answer: [${url}](${url})` +
