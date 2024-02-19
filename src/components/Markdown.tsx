@@ -71,7 +71,7 @@ export const memoize = (fn, id) => {
 };
 
 const fetched = new Map();
-
+const cache = new Map();
 export const Markdown = ({
   children,
   src,
@@ -88,6 +88,8 @@ export const Markdown = ({
   const { dispatch } = useContext(stateContext);
 
   useEffect(() => {
+    if (markdown === children && fetched[id || ''] === 2 && cache[id || ''])
+      setMarkdown(cache[id || '']);
     if (fetched?.[id || ''] > 0) return;
 
     if (src && !fetchFn) {
@@ -101,10 +103,13 @@ export const Markdown = ({
       fetchFn?.()
         .then((text) => {
           fetched[id || ''] = 2;
-          setMarkdown(text);
+
+          cache[id || ''] = text;
+          setMarkdown(() => text);
         })
         .catch(() => {
           fetched[id] = 3;
+
           setMarkdown(children);
         });
     }
@@ -112,7 +117,6 @@ export const Markdown = ({
 
   const headingRenderer = (props) => {
     const { children } = props;
-    console.log(props);
     const text = children?.[0] || '';
     if (typeof text === 'string') {
       const anchor = (text || '')
@@ -149,6 +153,8 @@ export const Markdown = ({
         alignContent: 'center',
       }}
     >
+      {JSON.stringify(markdown)}
+      {JSON.stringify(fetched[id])}
       <ReactMarkdown
         className={clsx({ 'markdown-small': small })}
         rehypePlugins={[rehypeRaw]}
