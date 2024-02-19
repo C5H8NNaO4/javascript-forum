@@ -134,12 +134,13 @@ export const ContentEditor = ({
                     onScroll: () => {
                       const scrollPrc =
                         (1 /
-                          (inputRef?.current?.getBoundingClientRect()?.height ||
-                            0)) *
+                          ((inputRef?.current?.scrollHeight || 0) -
+                            (inputRef?.current?.getBoundingClientRect()
+                              ?.height || 0))) *
                         (inputRef?.current?.scrollTop || 0);
+
                       const contentTop =
-                        (contentRef?.current?.getBoundingClientRect()?.height ||
-                          0) * scrollPrc;
+                        (contentRef?.current?.scrollHeight || 0) * scrollPrc;
 
                       contentRef?.current?.scrollTo({
                         top: contentTop,
