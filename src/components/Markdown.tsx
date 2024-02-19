@@ -97,8 +97,9 @@ export const Markdown = ({
   }, []);
 
   const headingRenderer = (props) => {
-    const { level, children } = props;
-    const text = children[0];
+    const { children } = props;
+    console.log(props);
+    const text = children?.[0] || '';
     if (typeof text === 'string') {
       const anchor = (text || '')
         .toLowerCase()
@@ -107,10 +108,14 @@ export const Markdown = ({
 
       if (preview)
         return createElement('b', { id: anchor || undefined }, children);
-      return createElement(`h${level}`, { id: anchor || undefined }, children);
+      return createElement(
+        props?.node?.tagName,
+        { id: anchor || undefined },
+        children
+      );
     }
     if (preview) return createElement('b', {}, children);
-    return createElement(`h${level}`, {}, children);
+    return createElement(props?.node?.tagName, {}, children);
   };
 
   return (
