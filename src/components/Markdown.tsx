@@ -96,7 +96,7 @@ export const Markdown = ({
         .then((text) => {
           setMarkdown(text);
         });
-    } else if (fetchFn && id !== undefined) {
+    } else if (fetchFn && id) {
       fetched[id || ''] = 1;
       fetchFn?.()
         .then((text) => {
