@@ -49,7 +49,7 @@ export const PostsPage = () => {
 
 const DRAFT = true;
 const Post = ({ id }) => {
-  const { state, dispatch } = useContext(stateContext);
+  const { dispatch } = useContext(stateContext);
   const [_, setSkip] = useState(false);
   const [component, { error, loading }] = useComponent(id);
 
