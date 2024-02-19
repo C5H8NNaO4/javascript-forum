@@ -140,7 +140,10 @@ export const ContentEditor = ({
                         (inputRef?.current?.scrollTop || 0);
 
                       const contentTop =
-                        (contentRef?.current?.scrollHeight || 0) * scrollPrc;
+                        ((contentRef?.current?.scrollHeight || 0) -
+                          (contentRef?.current?.getBoundingClientRect()
+                            ?.height || 0)) *
+                        scrollPrc;
 
                       contentRef?.current?.scrollTo({
                         top: contentTop,
