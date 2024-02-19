@@ -220,6 +220,7 @@ const PostOverviewMeta = ({ nVotes, nAnswers, post, plainText }) => {
       {plainText ? <span>{answersStr}</span> : <Chip label={answersStr}></Chip>}
       {post?.props?.canDelete && (
         <Chip
+          variant="outlined"
           sx={{
             backgroundColor: post.props.deleted
               ? 'error.main'
