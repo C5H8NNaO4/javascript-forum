@@ -63,23 +63,30 @@ export default function ButtonAppBar() {
               style={{ width: 24, height: 24 }}
               loading="lazy"
             />
-            <Link component={RouterLink} to="/" sx={{ color: 'white' }}>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                {getBreadCrumbs(pathname, (part, i, arr) => {
-                  if (part.includes('post-'))
-                    return (
-                      <Link sx={{ color: 'white' }} href={pathname}>
-                        {component?.props?.title || 'Post'}
-                      </Link>
-                    );
+
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ flexGrow: 1, color: 'white' }}
+            >
+              {getBreadCrumbs(pathname, (part, i, arr) => {
+                if (part.includes('post-'))
                   return (
-                    <Link sx={{ color: 'white' }} href={'/'}>
-                      Forum
+                    <Link
+                      sx={{ color: 'white' }}
+                      to={pathname}
+                      component={RouterLink}
+                    >
+                      {component?.props?.title || 'Post'}
                     </Link>
                   );
-                }).slice(0, state?.showBC ? 3 : 1)}
-              </Typography>
-            </Link>
+                return (
+                  <Link component={RouterLink} sx={{ color: 'white' }} to={'/'}>
+                    Forum
+                  </Link>
+                );
+              }).slice(0, state?.showBC ? 3 : 1)}
+            </Typography>
           </Box>
         )}
         <Box
