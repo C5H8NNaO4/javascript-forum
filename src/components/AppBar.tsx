@@ -22,7 +22,9 @@ import { navigation } from '../routes';
 import { GoogleLoginButton } from './LoggedInGoogleButton';
 import { BackgroundButton } from './BackgroundButton';
 const getBreadCrumbs = (pathName, getTitle) => {
-  const arr = pathName.split('/').map((e) => getTitle(e));
+  const arr = ['', ...pathName.split('/').filter(Boolean)].map((e) =>
+    getTitle(e)
+  );
   for (let i = 0; i < arr.length; i++) {
     if (i % 2 !== 0) {
       arr.splice(i, 0, '/');
