@@ -82,7 +82,9 @@ export const Markdown = ({
   id = null,
   fetchFn,
 }: MarkdownProps) => {
-  const [markdown, setMarkdown] = useState<string>(children || '');
+  const [markdown, setMarkdown] = useState<string>(
+    cache[id || ''] || children || ''
+  );
   const { dispatch } = useContext(stateContext);
 
   useEffect(() => {
