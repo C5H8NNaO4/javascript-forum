@@ -153,8 +153,6 @@ export const Markdown = ({
         alignContent: 'center',
       }}
     >
-      {JSON.stringify(markdown)}
-      {JSON.stringify(fetched[id])}
       <ReactMarkdown
         className={clsx({ 'markdown-small': small })}
         rehypePlugins={[rehypeRaw]}
