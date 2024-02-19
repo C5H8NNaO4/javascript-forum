@@ -9,19 +9,18 @@ import TableRow from '@mui/material/TableRow';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import { Link as RouterLink } from 'react-router-dom';
-import {
-  useContext,
-  useEffect,
-  useState,
-  createElement,
-  PropsWithChildren,
-  useCallback,
-} from 'react';
+import { useContext, useEffect, useRef, useState, createElement, PropsWithChildren } from 'react';
 
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { IconButton } from '@mui/material';
+import {
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+} from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import copy from 'copy-to-clipboard';
 import { Actions, stateContext } from '../provider/StateProvider';
@@ -37,7 +36,7 @@ type MarkdownProps = {
   small?: boolean;
   preview?: boolean;
   center?: boolean;
-  fetchFn?: () => Promise<string>;
+  landing?: boolean;
   id?: string;
 };
 
@@ -67,44 +66,30 @@ const fetched = new Map();
 
 export const Markdown = ({
   children,
-  id,
   src,
-  fetchFn,
   disablePadding,
   optimisticHeight = '0px',
   small = false,
   preview = false,
   center = true,
+  landing = false,
+  id = null,
 }: MarkdownProps) => {
   const [markdown, setMarkdown] = useState<string>(children || '');
-
-  const { dispatch } = useContext(stateContext);
+  const { state, dispatch } = useContext(stateContext);
 
   useEffect(() => {
-    if (fetched?.[id || ''] > 0) return;
-
-    if (src && !fetchFn) {
+    if (src) {
       fetch(src)
         .then((response) => response.text())
         .then((text) => {
           setMarkdown(text);
         });
-    } else if (fetchFn && id !== undefined) {
-      fetched[id] = 1;
-      fetchFn?.()
-        .then((text) => {
-          fetched[id] = 2;
-          setMarkdown(text);
-        })
-        .catch((e) => {
-          fetched[id] = 3;
-          setMarkdown(children);
-        });
     }
   }, []);
 
   const headingRenderer = (props) => {
-    const { node, children } = props;
+    const { level, children } = props;
     const text = children[0];
     if (typeof text === 'string') {
       const anchor = (text || '')
@@ -114,10 +99,10 @@ export const Markdown = ({
 
       if (preview)
         return createElement('b', { id: anchor || undefined }, children);
-      return createElement(node.tagName, { id: anchor || undefined }, children);
+      return createElement(`h${level}`, { id: anchor || undefined }, children);
     }
     if (preview) return createElement('b', {}, children);
-    return createElement(node.tagName, {}, children);
+    return createElement(`h${level}`, {}, children);
   };
 
   return (
@@ -126,6 +111,7 @@ export const Markdown = ({
         center,
         disablePadding,
         preview,
+        landing,
       })}
       style={{
         minHeight: optimisticHeight,
@@ -147,6 +133,32 @@ export const Markdown = ({
           h4: headingRenderer,
           h5: headingRenderer,
           h6: headingRenderer,
+          ul: (props: any) => {
+            console.log('Props', props);
+            return (
+              <List dense disablePadding>
+                {props.children.map((child) => {
+                  if (child === '\n') return null;
+                  return (
+                    <ListItem
+                      dense
+                      sx={{
+                        py: 0,
+                        my: 1,
+                        borderLeft: '1.5px solid',
+                        borderLeftColor: 'info.main',
+                      }}
+                    >
+                      <ListItemText
+                        sx={{ m: 0 }}
+                        primary={child?.props?.children || child}
+                      ></ListItemText>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            );
+          },
           pre: (props: PropsWithChildren<any>) => {
             const language = (
               props?.children?.props?.className || '-bash'
@@ -208,10 +220,10 @@ export const Markdown = ({
               </>
             );
           },
-          a: (props) => {
+          a: (props: any) => {
             return (
               <Link
-                to={props.href || ''}
+                to={props.href}
                 component={RouterLink}
                 sx={{ color: 'info.main' }}
               >
@@ -231,12 +243,12 @@ export const Markdown = ({
               </Box>
             );
           },
-          table: (props) => {
+          table: (props: any) => {
             return (
               <Table>
                 <TableHead>
                   <TableRow>
-                    {props?.children?.[0].props.children[0].props.children?.map(
+                    {props.children[0].props.children[0].props.children?.map(
                       (e) => {
                         return <TableCell>{e}</TableCell>;
                       }
@@ -244,7 +256,7 @@ export const Markdown = ({
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {props?.children?.[1].props.children.map((row) => {
+                  {props.children[1].props.children.map((row) => {
                     return (
                       <TableRow>
                         {row.props.children.map((e) => {
@@ -259,7 +271,7 @@ export const Markdown = ({
           },
         }}
       >
-        {src || fetchFn ? markdown : children}
+        {src ? markdown : children}
       </ReactMarkdown>
     </div>
   );
