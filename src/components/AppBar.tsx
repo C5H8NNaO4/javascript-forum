@@ -3,7 +3,6 @@ import { InputAdornment, useTheme, useMediaQuery } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import IconClear from '@mui/icons-material/Clear';
 import IconSearch from '@mui/icons-material/Search';
-
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
@@ -11,20 +10,34 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Actions, stateContext } from '../provider/StateProvider';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { authContext } from '@state-less/react-client';
-import { GoogleLoginButton } from './LoggedInGoogleButton';
+import { useComponent } from '@state-less/react-client';
+
+import { Actions, stateContext } from '../provider/StateProvider';
 import { ConnectionCounter } from '../server-components/examples/ConnectionCounter';
 import { navigation } from '../routes';
-import { BackgroundButton } from './BackgroundButton';
 
+import { GoogleLoginButton } from './LoggedInGoogleButton';
+import { BackgroundButton } from './BackgroundButton';
+const getBreadCrumbs = (pathName, getTitle) => {
+  const arr = pathName.split('/').map((e) => getTitle(e));
+  for (let i = 0; i < arr.length; i++) {
+    if (i % 2 !== 0) {
+      arr.splice(i, 0, '/');
+    }
+  }
+  return arr;
+};
 export default function ButtonAppBar() {
   const { state, dispatch } = React.useContext(stateContext);
   const { authenticate, session } = React.useContext(authContext);
   const { pathname } = useLocation();
-
+  const postId = pathname.split('/').at(-1) || '';
+  const [component] = useComponent(postId, {
+    skip: !postId,
+  });
   const theme = useTheme();
 
   const lessThanSmall = useMediaQuery(theme.breakpoints.down('sm'));
@@ -50,8 +63,19 @@ export default function ButtonAppBar() {
             />
             <Link component={RouterLink} to="/" sx={{ color: 'white' }}>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                {navigation.find((nav) => nav[0] === pathname)?.[3] ||
-                  (pathname.includes('/post-') ? 'Post' : 'React Server')}
+                {getBreadCrumbs(pathname, (part, i, arr) => {
+                  if (part.includes('post-'))
+                    return (
+                      <Link sx={{ color: 'white' }} href={pathname}>
+                        {component?.props?.title || 'Post'}
+                      </Link>
+                    );
+                  return (
+                    <Link sx={{ color: 'white' }} href={'/'}>
+                      Forum
+                    </Link>
+                  );
+                })}
               </Typography>
             </Link>
           </Box>
