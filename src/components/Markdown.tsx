@@ -12,6 +12,7 @@ import {
   useContext,
   useEffect,
   useState,
+  useMemo,
   createElement,
   PropsWithChildren,
 } from 'react';
@@ -115,26 +116,184 @@ export const Markdown = ({
     }
   }, [children, fetchFn, id, src, markdown]);
 
-  const headingRenderer = (props) => {
-    const { children } = props;
-    const text = children?.[0] || '';
-    if (typeof text === 'string') {
-      const anchor = (text || '')
-        .toLowerCase()
-        .replace(/[^\w\s]/g, '') // Remove special characters
-        .replace(/\s+/g, '-'); // Replace spaces with hyphens
+  const headingRenderer = useMemo(
+    () => (props) => {
+      const { children } = props;
+      const text = children?.[0] || '';
+      if (typeof text === 'string') {
+        const anchor = (text || '')
+          .toLowerCase()
+          .replace(/[^\w\s]/g, '') // Remove special characters
+          .replace(/\s+/g, '-'); // Replace spaces with hyphens
 
-      if (preview)
-        return createElement('b', { id: anchor || undefined }, children);
-      return createElement(
-        props?.node?.tagName,
-        { id: anchor || undefined },
-        children
-      );
-    }
-    if (preview) return createElement('b', {}, children);
-    return createElement(props?.node?.tagName, {}, children);
-  };
+        if (preview)
+          return createElement('b', { id: anchor || undefined }, children);
+        return createElement(
+          props?.node?.tagName,
+          { id: anchor || undefined },
+          children
+        );
+      }
+      if (preview) return createElement('b', {}, children);
+      return createElement(props?.node?.tagName, {}, children);
+    },
+    [preview]
+  );
+
+  const components = useMemo(() => {
+    return {
+      h1: headingRenderer,
+      h2: headingRenderer,
+      h3: headingRenderer,
+      h4: headingRenderer,
+      h5: headingRenderer,
+      h6: headingRenderer,
+      ul: (props: any) => {
+        return (
+          <List dense disablePadding>
+            {props.children.map((child) => {
+              if (child === '\n') return null;
+              return (
+                <ListItem
+                  dense
+                  sx={{
+                    py: 0,
+                    my: 1,
+                    borderLeft: '1.5px solid',
+                    borderLeftColor: 'info.main',
+                  }}
+                >
+                  <ListItemText
+                    sx={{ m: 0 }}
+                    primary={child?.props?.children || child}
+                  ></ListItemText>
+                </ListItem>
+              );
+            })}
+          </List>
+        );
+      },
+      pre: (props: PropsWithChildren<any>) => {
+        const language = (props?.children?.props?.className || '-bash').split(
+          '-'
+        )[1];
+
+        if (language === 'github') {
+          const url = props?.children?.props?.children;
+
+          return (
+            <Markdown src={url} key={url} center={false}>
+              {`Loading Markdown from Github: ${url}`}
+            </Markdown>
+          );
+        }
+        if (language === 'stackoverflow') {
+          const url = props?.children?.props?.children;
+          const id = url.split('/').at(-2);
+          return (
+            <Markdown
+              id={id}
+              key={id}
+              center={false}
+              disablePadding
+              fetchFn={async () => {
+                const res = await fetch(
+                  `https://api.stackexchange.com/2.3/answers/${id}?order=desc&sort=activity&site=stackoverflow&filter=!nNPvSNdWme&key=${encodeURIComponent('IQOO7kdoZ)ST9J0b)HCfww((')}&client_id=28299`
+                );
+
+                const json = await res.json();
+                const answer = json?.items?.[0];
+
+                return `${quote(answer?.body)}\n<sub>- [${answer?.owner?.['display_name']}](${answer?.owner?.link}): ${url}</sub>`;
+              }}
+            >
+              {`*See this Stackoverflow answer: [${url}](${url})` +
+                (!fetched[id] ? '...*' : '.*')}
+            </Markdown>
+          );
+        }
+
+        if (language === 'mermaid') {
+          return <Mermaid>{props?.children?.[0].props.children}</Mermaid>;
+        }
+
+        const child = Array.isArray(props.children)
+          ? props.children[0]
+          : props.children;
+
+        return (
+          <>
+            <Box sx={{ width: '100%', display: 'flex' }}>
+              <IconButton
+                sx={{ ml: 'auto', mb: -7, color: 'white' }}
+                onClick={() => {
+                  copy(props?.children?.[0].props.children);
+                  dispatch({
+                    type: Actions.SHOW_MESSAGE,
+                    value: 'Copied to clipboard',
+                  });
+                }}
+              >
+                <ContentCopyIcon />
+              </IconButton>
+            </Box>
+            <SyntaxHighlighter language={language} style={a11yDark}>
+              {child.props.children}
+            </SyntaxHighlighter>
+          </>
+        );
+      },
+      a: (props: any) => {
+        return (
+          <Link
+            to={props.href}
+            component={RouterLink}
+            sx={{ color: 'info.main' }}
+          >
+            {props.children}
+          </Link>
+        );
+      },
+      blockquote: (args) => {
+        return (
+          <Box
+            sx={{
+              borderLeft: '4px solid',
+              borderColor: 'primary.main',
+            }}
+          >
+            <blockquote {...args} />
+          </Box>
+        );
+      },
+      table: (props: any) => {
+        return (
+          <Table>
+            <TableHead>
+              <TableRow>
+                {props.children[0].props.children[0].props.children?.map(
+                  (e) => {
+                    return <TableCell>{e}</TableCell>;
+                  }
+                )}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {props.children[1].props.children.map((row) => {
+                return (
+                  <TableRow>
+                    {row.props.children.map((e) => {
+                      return <TableCell>{e}</TableCell>;
+                    })}
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        );
+      },
+    };
+  }, [dispatch, headingRenderer]);
 
   return (
     <div
@@ -157,158 +316,7 @@ export const Markdown = ({
         className={clsx({ 'markdown-small': small })}
         rehypePlugins={[rehypeRaw]}
         remarkPlugins={[remarkGfm]}
-        components={{
-          h1: headingRenderer,
-          h2: headingRenderer,
-          h3: headingRenderer,
-          h4: headingRenderer,
-          h5: headingRenderer,
-          h6: headingRenderer,
-          ul: (props: any) => {
-            return (
-              <List dense disablePadding>
-                {props.children.map((child) => {
-                  if (child === '\n') return null;
-                  return (
-                    <ListItem
-                      dense
-                      sx={{
-                        py: 0,
-                        my: 1,
-                        borderLeft: '1.5px solid',
-                        borderLeftColor: 'info.main',
-                      }}
-                    >
-                      <ListItemText
-                        sx={{ m: 0 }}
-                        primary={child?.props?.children || child}
-                      ></ListItemText>
-                    </ListItem>
-                  );
-                })}
-              </List>
-            );
-          },
-          pre: (props: PropsWithChildren<any>) => {
-            const language = (
-              props?.children?.props?.className || '-bash'
-            ).split('-')[1];
-
-            if (language === 'github') {
-              const url = props?.children?.props?.children;
-
-              return (
-                <Markdown src={url} key={url} center={false}>
-                  {`Loading Markdown from Github: ${url}`}
-                </Markdown>
-              );
-            }
-            if (language === 'stackoverflow') {
-              const url = props?.children?.props?.children;
-              const id = url.split('/').at(-2);
-              return (
-                <Markdown
-                  id={id}
-                  key={id}
-                  center={false}
-                  disablePadding
-                  fetchFn={async () => {
-                    const res = await fetch(
-                      `https://api.stackexchange.com/2.3/answers/${id}?order=desc&sort=activity&site=stackoverflow&filter=!nNPvSNdWme&key=${encodeURIComponent('IQOO7kdoZ)ST9J0b)HCfww((')}&client_id=28299`
-                    );
-
-                    const json = await res.json();
-                    const answer = json?.items?.[0];
-
-                    return `${quote(answer?.body)}\n<sub>- [${answer?.owner?.['display_name']}](${answer?.owner?.link}): ${url}</sub>`;
-                  }}
-                >
-                  {`*See this Stackoverflow answer: [${url}](${url})` +
-                    (!fetched[id] ? '...*' : '.*')}
-                </Markdown>
-              );
-            }
-
-            if (language === 'mermaid') {
-              return <Mermaid>{props?.children?.[0].props.children}</Mermaid>;
-            }
-
-            const child = Array.isArray(props.children)
-              ? props.children[0]
-              : props.children;
-
-            return (
-              <>
-                <Box sx={{ width: '100%', display: 'flex' }}>
-                  <IconButton
-                    sx={{ ml: 'auto', mb: -7, color: 'white' }}
-                    onClick={() => {
-                      copy(props?.children?.[0].props.children);
-                      dispatch({
-                        type: Actions.SHOW_MESSAGE,
-                        value: 'Copied to clipboard',
-                      });
-                    }}
-                  >
-                    <ContentCopyIcon />
-                  </IconButton>
-                </Box>
-                <SyntaxHighlighter language={language} style={a11yDark}>
-                  {child.props.children}
-                </SyntaxHighlighter>
-              </>
-            );
-          },
-          a: (props: any) => {
-            return (
-              <Link
-                to={props.href}
-                component={RouterLink}
-                sx={{ color: 'info.main' }}
-              >
-                {props.children}
-              </Link>
-            );
-          },
-          blockquote: (args) => {
-            return (
-              <Box
-                sx={{
-                  borderLeft: '4px solid',
-                  borderColor: 'primary.main',
-                }}
-              >
-                <blockquote {...args} />
-              </Box>
-            );
-          },
-          table: (props: any) => {
-            return (
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    {props.children[0].props.children[0].props.children?.map(
-                      (e) => {
-                        return <TableCell>{e}</TableCell>;
-                      }
-                    )}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {props.children[1].props.children.map((row) => {
-                    return (
-                      <TableRow>
-                        {row.props.children.map((e) => {
-                          return <TableCell>{e}</TableCell>;
-                        })}
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            );
-          },
-        }}
+        components={components}
       >
         {src || fetchFn ? markdown : children}
       </ReactMarkdown>
