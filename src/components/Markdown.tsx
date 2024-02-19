@@ -44,7 +44,8 @@ type MarkdownProps = {
   preview?: boolean;
   center?: boolean;
   landing?: boolean;
-  id?: string;
+  id?: null | string;
+  fetchFn?: () => Promise<any>;
 };
 
 mermaid.initialize({
