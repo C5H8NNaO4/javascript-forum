@@ -209,9 +209,9 @@ export const Markdown = ({
                     );
 
                     const json = await res.json();
-                    const answer = json?.items?.[0]?.body;
+                    const answer = json?.items?.[0];
 
-                    return `${quote(answer)}\n<sub>- ${url}</sub>`;
+                    return `${quote(answer?.body)}\n<sub>- [${answer?.owner?.['display_name']}](${answer?.owner?.link}): ${url}</sub>`;
                   }}
                 >
                   {`*See this Stackoverflow answer: [${url}](${url})` +
