@@ -26,7 +26,6 @@ import mermaid from 'mermaid';
 import clsx from 'clsx';
 
 import { Actions, stateContext } from '../provider/StateProvider';
-import remarkMdx from 'remark-mdx';
 
 type MarkdownProps = {
   children: string;
