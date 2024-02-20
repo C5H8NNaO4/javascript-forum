@@ -79,7 +79,7 @@ const Post = ({ id }) => {
       (entries) => {
         if (entries[0]?.isIntersecting) {
           dispatch({ type: Actions.SET_LAST_BC, value: true });
-        } else {
+        } else if (entries[0]?.boundingClientRect?.y > 0) {
           dispatch({ type: Actions.SET_LAST_BC, value: false });
         }
       },
