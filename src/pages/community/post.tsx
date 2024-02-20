@@ -244,7 +244,14 @@ const Answer = ({ answer }) => {
       <AnswerActions
         component={component}
         edit={edit}
-        setEdit={setEdit}
+        setEdit={async (e) => {
+          if (!e) {
+            await setBodyServer(body);
+            setEdit(0);
+          } else {
+            setEdit(2);
+          }
+        }}
         draft={DRAFT}
       />
       <CommunityComments id={answer?.children[1]?.component} />
