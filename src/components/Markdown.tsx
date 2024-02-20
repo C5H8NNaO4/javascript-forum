@@ -303,7 +303,6 @@ export const Markdown = ({
         );
       },
       stackoverflow: (props) => {
-        console.log('SO ', props);
         const { url, children } = props;
         if (typeof children === 'string') {
           const trimmed = children.trim();
@@ -314,6 +313,7 @@ export const Markdown = ({
               key={id}
               center={false}
               disablePadding
+              errorMD={trimmed}
               fetchFn={async () => {
                 const res = await fetch(
                   `https://api.stackexchange.com/2.3/answers/${id}?order=desc&sort=activity&site=stackoverflow&filter=!nNPvSNdWme&key=${encodeURIComponent('IQOO7kdoZ)ST9J0b)HCfww((')}&client_id=28299`
@@ -326,7 +326,7 @@ export const Markdown = ({
               }}
             >
               {`*See this Stackoverflow answer: [${url}](${url})` +
-                (fetched[id] === 2 ? trimmed : !fetched[id] ? '...*' : '.*')}
+                (!fetched[id] ? '...*' : '.*')}
             </Markdown>
           );
         }
