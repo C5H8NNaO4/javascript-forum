@@ -26,6 +26,7 @@ import mermaid from 'mermaid';
 import clsx from 'clsx';
 
 import { Actions, stateContext } from '../provider/StateProvider';
+import remarkMdx from 'remark-mdx';
 
 type MarkdownProps = {
   children: string;
@@ -38,6 +39,7 @@ type MarkdownProps = {
   landing?: boolean;
   id?: null | string;
   fetchFn?: () => Promise<any>;
+  errorMD?: string;
 };
 
 const quote = (str) => {
@@ -81,13 +83,13 @@ export const Markdown = ({
   center = true,
   landing = false,
   id = null,
+  errorMD,
   fetchFn,
 }: MarkdownProps) => {
   const [markdown, setMarkdown] = useState<string>(
     cache[id || ''] || children || ''
   );
   const { dispatch } = useContext(stateContext);
-
   useEffect(() => {
     if (markdown === children && fetched[id || ''] === 2 && cache[id || ''])
       setMarkdown(cache[id || '']);
@@ -98,6 +100,11 @@ export const Markdown = ({
         .then((response) => response.text())
         .then((text) => {
           setMarkdown(text);
+        })
+        .catch(() => {
+          if (errorMD) {
+            setMarkdown(errorMD);
+          }
         });
     } else if (fetchFn && id) {
       fetched[id || ''] = 1;
@@ -110,8 +117,11 @@ export const Markdown = ({
         })
         .catch(() => {
           fetched[id] = 3;
-
-          setMarkdown(children);
+          if (errorMD) {
+            setMarkdown(errorMD);
+          } else {
+            setMarkdown(children);
+          }
         });
     }
   }, [children, fetchFn, id, src, markdown]);
@@ -290,6 +300,46 @@ export const Markdown = ({
               })}
             </TableBody>
           </Table>
+        );
+      },
+      stackoverflow: (props) => {
+        console.log('SO ', props);
+        const { url, children } = props;
+        if (typeof children === 'string') {
+          const trimmed = children.trim();
+          const id = url.split('/').at(-2);
+          return (
+            <Markdown
+              id={id}
+              key={id}
+              center={false}
+              disablePadding
+              fetchFn={async () => {
+                const res = await fetch(
+                  `https://api.stackexchange.com/2.3/answers/${id}?order=desc&sort=activity&site=stackoverflow&filter=!nNPvSNdWme&key=${encodeURIComponent('IQOO7kdoZ)ST9J0b)HCfww((')}&client_id=28299`
+                );
+
+                const json = await res.json();
+                const answer = json?.items?.[0];
+
+                return `${quote(answer?.body)}\n<sub>- [${answer?.owner?.['display_name']}](${answer?.owner?.link}): ${url}</sub>`;
+              }}
+            >
+              {`*See this Stackoverflow answer: [${url}](${url})` +
+                (fetched[id] === 2 ? trimmed : !fetched[id] ? '...*' : '.*')}
+            </Markdown>
+          );
+        }
+      },
+      github: (props) => {
+        const { url, children } = props;
+        const trimmed =
+          typeof children === 'string' ? children.trim() : children;
+
+        return (
+          <Markdown src={url} key={url} center={false} errorMD={trimmed}>
+            {`Loading Markdown from Github: ${url}`}
+          </Markdown>
         );
       },
     };
