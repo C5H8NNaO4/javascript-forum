@@ -88,13 +88,12 @@ export const useFetch = (
     setState((state) => ({ ...state, loading: 1 }));
     fetchFn()
       .then(async (text) => {
-        console.log('FETCH SO ', text.slice(0, 10));
         setState((state) => ({ ...state, loading: 2, result: text }));
       })
       .catch((e) => {
         setState((state) => ({ ...state, loading: 3, result: null, error: e }));
       });
-  }, [fetchFn, setState]);
+  }, [fetchFn, setState, state?.loading]);
 
   return state;
 };
@@ -373,7 +372,7 @@ export const Markdown = ({
         remarkPlugins={[remarkGfm]}
         components={components}
       >
-        {result}
+        {error ? errorMD : loading < 2 ? children : result}
       </ReactMarkdown>
     </div>
   );
