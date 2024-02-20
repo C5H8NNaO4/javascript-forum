@@ -10,17 +10,16 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { authContext } from '@state-less/react-client';
 import { useComponent } from '@state-less/react-client';
 
 import { Actions, stateContext } from '../provider/StateProvider';
 import { ConnectionCounter } from '../server-components/examples/ConnectionCounter';
-import { navigation } from '../routes';
 
 import { GoogleLoginButton } from './LoggedInGoogleButton';
 import { BackgroundButton } from './BackgroundButton';
+
 const getBreadCrumbs = (pathName, getTitle) => {
   const arr = ['', ...pathName.split('/').filter(Boolean)].map((e) =>
     getTitle(e)
@@ -34,7 +33,6 @@ const getBreadCrumbs = (pathName, getTitle) => {
 };
 export default function ButtonAppBar() {
   const { state, dispatch } = React.useContext(stateContext);
-  const { authenticate, session } = React.useContext(authContext);
   const { pathname } = useLocation();
   const postId = pathname.split('/').at(-1) || '';
   const [component] = useComponent(postId, {
@@ -45,7 +43,17 @@ export default function ButtonAppBar() {
   const lessThanSmall = useMediaQuery(theme.breakpoints.down('sm'));
   return (
     <AppBar sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-      <Toolbar>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          minHeight: {
+            xs: '48px',
+            sm: '64px',
+          },
+          px: 2,
+        }}
+      >
         <IconButton
           size="large"
           edge="start"
@@ -150,7 +158,7 @@ export default function ButtonAppBar() {
             <GoogleLoginButton />
           </Box>
         )}
-      </Toolbar>
+      </Box>
     </AppBar>
   );
 }

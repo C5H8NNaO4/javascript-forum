@@ -176,6 +176,10 @@ pre {
   width: -moz-available;
 }
 
+.markdown > pre {
+  max-width: 100ch;
+}
+
 .markdown.preview > * {
   max-width: 70ch;
 }

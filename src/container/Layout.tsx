@@ -176,12 +176,15 @@ export const Layout = () => {
         {
           <header>
             <ButtonAppBar />
-            {/* <LinearProgress
-              variant="determinate"
-              value={time / 10}
-              sx={{ mt: 8 }}
-            /> */}
-            <Box sx={{ mt: 8 }} />
+
+            <Box
+              sx={{
+                mt: {
+                  xs: 6,
+                  sm: 8,
+                },
+              }}
+            />
             <div
               id="loading-container"
               style={{ display: 'flex', width: '100%' }}
@@ -376,6 +379,7 @@ export const Layout = () => {
                 </Grid>
                 <Grid item xs={12} sm={6} md={4} xl={2}>
                   <Card
+                    square
                     sx={{
                       marginTop: 1,
                       boxShadow: { xs: '10px 0px 8px 1px', sm: 'none' },
