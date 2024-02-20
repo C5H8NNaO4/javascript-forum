@@ -8,14 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import { Link as RouterLink } from 'react-router-dom';
-import {
-  useContext,
-  useEffect,
-  useState,
-  useMemo,
-  createElement,
-  PropsWithChildren,
-} from 'react';
+import { useContext, useEffect, useMemo, createElement } from 'react';
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { IconButton, List, ListItem, ListItemText } from '@mui/material';
@@ -24,6 +17,8 @@ import copy from 'copy-to-clipboard';
 import rehypeRaw from 'rehype-raw';
 import mermaid from 'mermaid';
 import clsx from 'clsx';
+import { atom, useAtom, PrimitiveAtom } from 'jotai';
+import { v4 } from 'uuid';
 
 import { Actions, stateContext } from '../provider/StateProvider';
 
@@ -36,9 +31,63 @@ type MarkdownProps = {
   preview?: boolean;
   center?: boolean;
   landing?: boolean;
-  id?: null | string;
-  fetchFn?: () => Promise<any>;
+  cacheKey?: string;
+  fetchFn?: () => Promise<string>;
   errorMD?: string;
+};
+
+export const FetchSOAnswerById = (id, url) => async () => {
+  const res = await fetch(
+    `https://api.stackexchange.com/2.3/answers/${id}?order=desc&sort=activity&site=stackoverflow&filter=!nNPvSNdWme&key=${encodeURIComponent('IQOO7kdoZ)ST9J0b)HCfww((')}&client_id=28299`
+  );
+
+  const json = await res.json();
+  const answer = json?.items?.[0];
+
+  return `${quote(answer?.body)}\n<sub>- [${answer?.owner?.['display_name']}](${answer?.owner?.link}): ${url}</sub>`;
+};
+
+export const FetchTextContent = (url) => async () => {
+  const res = await fetch(url);
+  const text = await res.text();
+  return text;
+};
+
+export type FetchState = {
+  loading?: boolean;
+  result: string | null;
+  error: Error | null;
+};
+const useFetchAtoms: Record<string, PrimitiveAtom<FetchState>> = {};
+export const useFetch = (fetchFn: () => Promise<string>, cacheKey?: string) => {
+  const key = useMemo(() => {
+    return cacheKey || v4();
+  }, [cacheKey]);
+
+  const atm =
+    useFetchAtoms[key] ||
+    (useFetchAtoms[key] = atom<FetchState>({
+      loading: false,
+      error: null,
+      result: null,
+    }));
+  const [state, setState] = useAtom(atm);
+
+  useEffect(() => {
+    const { loading, result } = state;
+    if (!fetchFn) return;
+    if (loading || result) return;
+    setState({ ...state, loading: true });
+    fetchFn()
+      .then(async (text) => {
+        setState({ ...state, loading: false, result: text });
+      })
+      .catch((e) => {
+        setState({ ...state, loading: false, result: null, error: e });
+      });
+  }, [fetchFn, state, setState]);
+
+  return state;
 };
 
 const quote = (str) => {
@@ -63,15 +112,6 @@ const Mermaid = (props) => {
   return <div className="mermaid">{props.children}</div>;
 };
 
-const map = new Map();
-export const memoize = (fn, id) => {
-  if (map.has(id)) return map.get(id);
-  map.set(id, fn);
-  return map.get(id);
-};
-
-const fetched = new Map();
-const cache = new Map();
 export const Markdown = ({
   children,
   src,
@@ -81,49 +121,20 @@ export const Markdown = ({
   preview = false,
   center = true,
   landing = false,
-  id = null,
   errorMD,
-  fetchFn,
+  fetchFn: userFetchFn,
+  cacheKey = src,
 }: MarkdownProps) => {
-  const [markdown, setMarkdown] = useState<string>(
-    cache[id || ''] || children || ''
-  );
   const { dispatch } = useContext(stateContext);
-  useEffect(() => {
-    if (markdown === children && fetched[id || ''] === 2 && cache[id || ''])
-      setMarkdown(cache[id || '']);
-    if (fetched?.[id || ''] > 0) return;
 
-    if (src && !fetchFn) {
-      fetch(src)
-        .then((response) => response.text())
-        .then((text) => {
-          setMarkdown(text);
-        })
-        .catch(() => {
-          if (errorMD) {
-            setMarkdown(errorMD);
-          }
-        });
-    } else if (fetchFn && id) {
-      fetched[id || ''] = 1;
-      fetchFn?.()
-        .then((text) => {
-          fetched[id || ''] = 2;
+  let fetchFn = userFetchFn;
+  if (src && !fetchFn) {
+    fetchFn = FetchTextContent(src);
+  } else if (!src && !fetchFn) {
+    fetchFn = async () => children;
+  }
 
-          cache[id || ''] = text;
-          setMarkdown(() => text);
-        })
-        .catch(() => {
-          fetched[id] = 3;
-          if (errorMD) {
-            setMarkdown(errorMD);
-          } else {
-            setMarkdown(children);
-          }
-        });
-    }
-  }, [children, fetchFn, id, src, markdown]);
+  const { loading, result, error } = useFetch(fetchFn!, cacheKey);
 
   const headingRenderer = useMemo(
     () => (props) => {
@@ -157,7 +168,7 @@ export const Markdown = ({
       h4: headingRenderer,
       h5: headingRenderer,
       h6: headingRenderer,
-      ul: (props: any) => {
+      ul: (props) => {
         return (
           <List dense disablePadding>
             {props.children.map((child) => {
@@ -182,7 +193,7 @@ export const Markdown = ({
           </List>
         );
       },
-      pre: (props: PropsWithChildren<any>) => {
+      pre: (props) => {
         const language = (props?.children?.props?.className || '-bash').split(
           '-'
         )[1];
@@ -199,25 +210,16 @@ export const Markdown = ({
         if (language === 'stackoverflow') {
           const url = props?.children?.props?.children;
           const id = url.split('/').at(-2);
+
           return (
             <Markdown
-              id={id}
               key={id}
               center={false}
               disablePadding
-              fetchFn={async () => {
-                const res = await fetch(
-                  `https://api.stackexchange.com/2.3/answers/${id}?order=desc&sort=activity&site=stackoverflow&filter=!nNPvSNdWme&key=${encodeURIComponent('IQOO7kdoZ)ST9J0b)HCfww((')}&client_id=28299`
-                );
-
-                const json = await res.json();
-                const answer = json?.items?.[0];
-
-                return `${quote(answer?.body)}\n<sub>- [${answer?.owner?.['display_name']}](${answer?.owner?.link}): ${url}</sub>`;
-              }}
+              fetchFn={FetchSOAnswerById(id, url)}
+              cacheKey={id}
             >
-              {`*See this Stackoverflow answer: [${url}](${url})` +
-                (!fetched[id] ? '...*' : '.*')}
+              {`*See this Stackoverflow answer: [${url}](${url})`}
             </Markdown>
           );
         }
@@ -252,7 +254,7 @@ export const Markdown = ({
           </>
         );
       },
-      a: (props: any) => {
+      a: (props) => {
         return (
           <Link
             to={props.href}
@@ -275,7 +277,7 @@ export const Markdown = ({
           </Box>
         );
       },
-      table: (props: any) => {
+      table: (props) => {
         return (
           <Table>
             <TableHead>
@@ -308,24 +310,14 @@ export const Markdown = ({
           const id = url.split('/').at(-2);
           return (
             <Markdown
-              id={id}
               key={id}
               center={false}
               disablePadding
               errorMD={trimmed}
-              fetchFn={async () => {
-                const res = await fetch(
-                  `https://api.stackexchange.com/2.3/answers/${id}?order=desc&sort=activity&site=stackoverflow&filter=!nNPvSNdWme&key=${encodeURIComponent('IQOO7kdoZ)ST9J0b)HCfww((')}&client_id=28299`
-                );
-
-                const json = await res.json();
-                const answer = json?.items?.[0];
-
-                return `${quote(answer?.body)}\n<sub>- [${answer?.owner?.['display_name']}](${answer?.owner?.link}): ${url}</sub>`;
-              }}
+              fetchFn={FetchSOAnswerById(id, url)}
+              cacheKey={id}
             >
-              {`*See this Stackoverflow answer: [${url}](${url})` +
-                (!fetched[id] ? '...*' : '.*')}
+              {`*See this Stackoverflow answer: [${url}](${url})`}
             </Markdown>
           );
         }
@@ -367,7 +359,7 @@ export const Markdown = ({
         remarkPlugins={[remarkGfm]}
         components={components}
       >
-        {src || fetchFn ? markdown : children}
+        {error ? errorMD : loading ? children : result}
       </ReactMarkdown>
     </div>
   );
