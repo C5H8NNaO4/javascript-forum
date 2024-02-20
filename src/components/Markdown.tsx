@@ -32,7 +32,7 @@ type MarkdownProps = {
   center?: boolean;
   landing?: boolean;
   cacheKey?: string;
-  fetchFn?: () => Promise<string>;
+  fetchFn?: (() => Promise<string>) | null;
   errorMD?: string;
 };
 
@@ -54,12 +54,16 @@ export const FetchTextContent = (url) => async () => {
 };
 
 export type FetchState = {
-  loading?: boolean;
+  loading: number;
   result: string | null;
   error: Error | null;
 };
 const useFetchAtoms: Record<string, PrimitiveAtom<FetchState>> = {};
-export const useFetch = (fetchFn: () => Promise<string>, cacheKey?: string) => {
+export const useFetch = (
+  initialValue: string,
+  fetchFn: null | (() => Promise<string>),
+  cacheKey?: string
+) => {
   const key = useMemo(() => {
     return cacheKey || v4();
   }, [cacheKey]);
@@ -67,25 +71,30 @@ export const useFetch = (fetchFn: () => Promise<string>, cacheKey?: string) => {
   const atm =
     useFetchAtoms[key] ||
     (useFetchAtoms[key] = atom<FetchState>({
-      loading: false,
+      loading: fetchFn === null ? 2 : 0,
       error: null,
-      result: null,
+      result: fetchFn === null ? initialValue : null,
     }));
   const [state, setState] = useAtom(atm);
 
   useEffect(() => {
-    const { loading, result } = state;
+    if (fetchFn) return;
+    setState((state) => ({ ...state, result: initialValue }));
+  }, [initialValue, setState, fetchFn]);
+
+  useEffect(() => {
     if (!fetchFn) return;
-    if (loading || result) return;
-    setState({ ...state, loading: true });
+    if (state?.loading > 0) return;
+    setState((state) => ({ ...state, loading: 1 }));
     fetchFn()
       .then(async (text) => {
-        setState({ ...state, loading: false, result: text });
+        console.log('FETCH SO ', text.slice(0, 10));
+        setState((state) => ({ ...state, loading: 2, result: text }));
       })
       .catch((e) => {
-        setState({ ...state, loading: false, result: null, error: e });
+        setState((state) => ({ ...state, loading: 3, result: null, error: e }));
       });
-  }, [fetchFn, state, setState]);
+  }, [fetchFn, setState]);
 
   return state;
 };
@@ -128,13 +137,18 @@ export const Markdown = ({
   const { dispatch } = useContext(stateContext);
 
   let fetchFn = userFetchFn;
+  const fetchSrc = useMemo(() => FetchTextContent(src), [src]);
   if (src && !fetchFn) {
-    fetchFn = FetchTextContent(src);
+    fetchFn = fetchSrc;
   } else if (!src && !fetchFn) {
-    fetchFn = async () => children;
+    fetchFn = null;
   }
 
-  const { loading, result, error } = useFetch(fetchFn!, cacheKey);
+  const { loading, result, error } = useFetch(
+    children,
+    fetchFn || null,
+    cacheKey
+  );
 
   const headingRenderer = useMemo(
     () => (props) => {
@@ -359,7 +373,7 @@ export const Markdown = ({
         remarkPlugins={[remarkGfm]}
         components={components}
       >
-        {error ? errorMD : loading ? children : result}
+        {result}
       </ReactMarkdown>
     </div>
   );
