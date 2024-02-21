@@ -152,7 +152,7 @@ export const Markdown = ({
   const headingRenderer = useMemo(
     () => (props) => {
       const { children } = props;
-      const text = children?.[0] || '';
+      const text = children || '';
       if (typeof text === 'string') {
         const anchor = (text || '')
           .toLowerCase()
