@@ -127,71 +127,85 @@ const Post = (post) => {
         opacity: post.props.deleted ? 0.9 : 1,
       }}
     >
-      {post?.props?.sticky && (
-        <Box
-          sx={{
-            width: {
-              xs: '100%',
-              md: '2px',
-            },
-            height: {
-              xs: '2px',
-              md: 'unset',
-            },
-            // borderTop: '4px dashed',
-            backgroundColor: 'info.main',
-          }}
-        ></Box>
-      )}
-      <Grid container>
-        <Grid item order={{ xs: 2, md: 0 }} xs={12} md={3}>
-          <FlexBox sx={{ flexDirection: 'column', gap: 1, minWidth: 200 }}>
-            <PostOverviewMeta
-              plainText={false}
-              nAnswers={nAnswers}
-              nVotes={sum}
-              post={post}
-            />
-          </FlexBox>
-        </Grid>
-        <Grid item xs={12} md={9}>
-          <Box>
-            <CardHeader
-              title={
-                <Link
-                  sx={{ color: 'secondary.main' }}
-                  to={`${FORUM_BASE_PATH}/${post.component}`}
-                  component={RouterLink}
-                >
-                  {post.props.title}
-                </Link>
-              }
-              sx={{ pb: 0 }}
-            />
-            <CardContent
-              sx={{
-                pt: 0,
-                pb: '0rem !important',
-                maxHeight: '5rem',
-                mb: 2,
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: {
+            xs: 'column',
+            md: 'row',
+          },
+        }}
+      >
+        {post?.props?.sticky && (
+          <Box
+            sx={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              width: {
+                xs: '100%',
+                md: '2px',
+              },
+              height: {
+                xs: '2px',
+                md: 'unset',
+              },
+              // borderTop: '4px dashed',
+              backgroundColor: 'info.main',
+            }}
+          ></Box>
+        )}
 
-                overflow: 'hidden',
-              }}
-            >
-              <Markdown preview disablePadding center={false}>
-                {post.props.body}
-              </Markdown>
-            </CardContent>
-            {post.props.tags?.length > 0 && (
-              <CardContent sx={{ display: 'flex', gap: 1 }}>
-                {post.props.tags?.map((tag) => (
-                  <Chip size="small" label={tag} />
-                ))}
+        <Grid container>
+          <Grid item order={{ xs: 2, md: 0 }} xs={12} md={3}>
+            <FlexBox sx={{ flexDirection: 'column', gap: 1, minWidth: 200 }}>
+              <PostOverviewMeta
+                plainText={false}
+                nAnswers={nAnswers}
+                nVotes={sum}
+                post={post}
+              />
+            </FlexBox>
+          </Grid>
+          <Grid item xs={12} md={9}>
+            <Box>
+              <CardHeader
+                title={
+                  <Link
+                    sx={{ color: 'secondary.main' }}
+                    to={`${FORUM_BASE_PATH}/${post.component}`}
+                    component={RouterLink}
+                  >
+                    {post.props.title}
+                  </Link>
+                }
+                sx={{ pb: 0 }}
+              />
+              <CardContent
+                sx={{
+                  pt: 0,
+                  pb: '0rem !important',
+                  maxHeight: '5rem',
+                  mb: 2,
+
+                  overflow: 'hidden',
+                }}
+              >
+                <Markdown preview disablePadding center={false}>
+                  {post.props.body}
+                </Markdown>
               </CardContent>
-            )}
-          </Box>
+              {post.props.tags?.length > 0 && (
+                <CardContent sx={{ display: 'flex', gap: 1 }}>
+                  {post.props.tags?.map((tag) => (
+                    <Chip size="small" label={tag} />
+                  ))}
+                </CardContent>
+              )}
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </Card>
   );
 };
