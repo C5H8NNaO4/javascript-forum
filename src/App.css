@@ -181,7 +181,8 @@ pre {
 }
 
 .markdown.preview > * {
-  max-width: 70ch;
+  width: 70ch;
+  max-width: 100%;
 }
 
 .markdown.center > :is(h1, h2, h3, h4, h5, h6) {
@@ -190,8 +191,8 @@ pre {
   min-width: 100%;
 }
 .markdown > p {
-  max-width: 70ch;
-
+  width: 70ch;
+  max-width: 100%;
   /* text-overflow: ellipsis; */
   overflow: hidden;
   word-break: break-word;

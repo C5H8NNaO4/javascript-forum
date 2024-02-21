@@ -154,7 +154,7 @@ const Post = (post) => {
             />
           </FlexBox>
         </Grid>
-        <Grid item>
+        <Grid item sx={{ maxWidth: '100%' }}>
           <Box>
             <CardHeader
               title={
@@ -208,6 +208,7 @@ const PostOverviewMeta = ({ nVotes, nAnswers, post, plainText }) => {
           md: 'unset',
         },
         display: 'flex',
+        flexWrap: 'wrap',
         flexDirection: {
           xs: 'row',
           md: 'column',

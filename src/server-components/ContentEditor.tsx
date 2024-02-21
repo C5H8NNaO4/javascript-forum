@@ -6,6 +6,7 @@ import {
   TextField,
   Chip,
   Avatar,
+  Box,
 } from '@mui/material';
 import { useRef } from 'react';
 import { PushPin, PushPinOutlined, Person } from '@mui/icons-material';
@@ -18,45 +19,57 @@ export const PostActions = ({ component, edit, setEdit, draft: _ }) => {
   const editTitle = edit === 2 ? 'Save' : edit === 1 ? 'Ok' : 'Edit';
 
   return (
-    <CardActions>
-      {component?.props?.canDelete && (
-        <Button
-          disabled={component?.props?.deleted}
-          color="error"
-          onClick={() => component.props.del()}
-        >
-          Delete
-        </Button>
-      )}
-      {!component?.props?.approved &&
-        component?.props?.canDelete &&
-        !component?.props?.deleted && (
+    <CardActions
+      sx={{
+        display: 'flex',
+        flexDirection: {
+          xs: 'column-reverse',
+          sm: 'row',
+        },
+        flexWrap: 'wrap',
+        width: '100%',
+      }}
+    >
+      <Box>
+        {component?.props?.canDelete && (
           <Button
             disabled={component?.props?.deleted}
-            color="success"
-            onClick={() => component.props.approve()}
+            color="error"
+            onClick={() => component.props.del()}
           >
-            Approve
+            Delete
           </Button>
         )}
-      {component?.props?.canDelete && !component?.props?.deleted && (
-        <Button
-          disabled={component?.props?.deleted}
-          color={component?.props?.sticky ? 'success' : undefined}
-          onClick={() => component.props.toggleSticky()}
-        >
-          {!component?.props?.sticky ? <PushPinOutlined /> : <PushPin />}
-          Sticky
-        </Button>
-      )}
-      {component?.props?.canDelete && !component?.props?.deleted && (
-        <SaveButton
-          component={component}
-          edit={edit}
-          title={editTitle}
-          setEdit={setEdit}
-        />
-      )}
+        {!component?.props?.approved &&
+          component?.props?.canDelete &&
+          !component?.props?.deleted && (
+            <Button
+              disabled={component?.props?.deleted}
+              color="success"
+              onClick={() => component.props.approve()}
+            >
+              Approve
+            </Button>
+          )}
+        {component?.props?.canDelete && !component?.props?.deleted && (
+          <Button
+            disabled={component?.props?.deleted}
+            color={component?.props?.sticky ? 'success' : undefined}
+            onClick={() => component.props.toggleSticky()}
+          >
+            {!component?.props?.sticky ? <PushPinOutlined /> : <PushPin />}
+            Sticky
+          </Button>
+        )}
+        {component?.props?.canDelete && !component?.props?.deleted && (
+          <SaveButton
+            component={component}
+            edit={edit}
+            title={editTitle}
+            setEdit={setEdit}
+          />
+        )}
+      </Box>
       <OwnerChip owner={component?.props?.owner} />
     </CardActions>
   );
@@ -90,7 +103,7 @@ export const AnswerActions = ({ component, edit, setEdit, draft }) => {
             borderStyle: 'dashed',
             borderColor: 'secondary.main',
             display: 'flex',
-            widt: '100%',
+            width: '100%',
           }}
         >
           <Button
@@ -126,7 +139,7 @@ export const OwnerChip = ({ owner, sx = {} }) => {
   return (
     <Chip
       avatar={<Avatar src={picture} />}
-      sx={{ marginLeft: 'auto !important' }}
+      sx={{ marginLeft: 'auto !important', mr: 3 }}
       label={name}
     />
   );
@@ -145,7 +158,7 @@ export const ContentEditor = ({
 
   return (
     <>
-      <Grid container>
+      <Grid container sx={{ maxWidth: '100%' }}>
         {edit && (
           <Grid item xs={12} md={7}>
             <CardContent sx={{ flex: 1 }}>
@@ -200,7 +213,7 @@ export const ContentEditor = ({
             sx={{
               flex: 1,
               maxHeight: edit ? (window.innerHeight - 120) / 1.5 : 'unset',
-              overflowY: 'scroll',
+              overflowY: edit ? 'scroll' : 'unset',
             }}
           >
             {<Markdown center={false}>{body}</Markdown>}

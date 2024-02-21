@@ -138,7 +138,15 @@ const Post = ({ id }) => {
         {!component?.props?.canDelete && !component?.props?.approved && (
           <Alert severity="info">This post needs approval from an admin.</Alert>
         )}
-        <FlexBox>
+        <FlexBox
+          sx={{
+            maxWidth: '100%',
+            flexDirection: {
+              xs: 'column',
+              sm: 'row',
+            },
+          }}
+        >
           {component?.children[0] && (
             <UpDownButtons
               data={component?.children[0]}
