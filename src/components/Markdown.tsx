@@ -7,7 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useContext, useEffect, useMemo, createElement } from 'react';
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -22,6 +22,15 @@ import { v4 } from 'uuid';
 
 import { Actions, stateContext } from '../provider/StateProvider';
 
+const getChildText = (props) => {
+  const texts =
+    props.children?.map?.((c) => {
+      if (typeof c === 'string') return c;
+      if (c.type === 'code') return c.props.children;
+    }) || [];
+
+  return texts.join('');
+};
 type MarkdownProps = {
   children: string;
   src?: string;
@@ -134,7 +143,7 @@ export const Markdown = ({
   cacheKey = src,
 }: MarkdownProps) => {
   const { dispatch } = useContext(stateContext);
-
+  const { hash } = useLocation();
   let fetchFn = userFetchFn;
   const fetchSrc = useMemo(() => FetchTextContent(src), [src]);
   if (src && !fetchFn) {
@@ -149,10 +158,19 @@ export const Markdown = ({
     cacheKey
   );
 
+  useEffect(() => {
+    if (loading > 1 && hash) {
+      document
+        .querySelector(hash)
+        ?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+  }, [loading, hash]);
+
   const headingRenderer = useMemo(
     () => (props) => {
       const { children } = props;
-      const text = children || '';
+      const text = getChildText(props);
+      console.log('HEADING ANCHOR', text);
       if (typeof text === 'string') {
         const anchor = (text || '')
           .toLowerCase()
@@ -271,7 +289,18 @@ export const Markdown = ({
         return (
           <Link
             to={props.href}
-            component={RouterLink}
+            component={(props) => {
+              return (
+                <RouterLink
+                  {...props}
+                  onClick={() => {
+                    document
+                      .querySelector(hash)
+                      ?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                  }}
+                />
+              );
+            }}
             sx={{ color: 'info.main' }}
           >
             {props.children}

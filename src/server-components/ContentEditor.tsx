@@ -4,9 +4,11 @@ import {
   CardContent,
   Grid,
   TextField,
+  Chip,
+  Avatar,
 } from '@mui/material';
 import { useRef } from 'react';
-import { PushPin, PushPinOutlined } from '@mui/icons-material';
+import { PushPin, PushPinOutlined, Person } from '@mui/icons-material';
 
 import { Markdown } from '../components/Markdown';
 
@@ -47,12 +49,15 @@ export const PostActions = ({ component, edit, setEdit, draft: _ }) => {
           Sticky
         </Button>
       )}
-      <SaveButton
-        component={component}
-        edit={edit}
-        title={editTitle}
-        setEdit={setEdit}
-      />
+      {component?.props?.canDelete && !component?.props?.deleted && (
+        <SaveButton
+          component={component}
+          edit={edit}
+          title={editTitle}
+          setEdit={setEdit}
+        />
+      )}
+      <OwnerChip owner={component?.props?.owner} />
     </CardActions>
   );
 };
@@ -84,6 +89,8 @@ export const AnswerActions = ({ component, edit, setEdit, draft }) => {
             borderBottomWidth: '1px',
             borderStyle: 'dashed',
             borderColor: 'secondary.main',
+            display: 'flex',
+            widt: '100%',
           }}
         >
           <Button
@@ -101,14 +108,27 @@ export const AnswerActions = ({ component, edit, setEdit, draft }) => {
           />
 
           <Reactions data={component?.children?.[2]} />
+          <OwnerChip owner={component?.props?.owner} />
         </CardActions>
       )}
       {!component?.props?.canDelete && (
-        <CardActions>
+        <CardActions sx={{ display: 'flex' }}>
           <Reactions data={component?.children?.[2]} />
+          <OwnerChip owner={component?.props?.owner} />
         </CardActions>
       )}
     </>
+  );
+};
+
+export const OwnerChip = ({ owner, sx = {} }) => {
+  const { name = 'Anonymous', picture } = owner;
+  return (
+    <Chip
+      avatar={<Avatar src={picture} />}
+      sx={{ marginLeft: 'auto !important' }}
+      label={name}
+    />
   );
 };
 export const ContentEditor = ({
