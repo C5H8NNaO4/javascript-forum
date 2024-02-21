@@ -127,24 +127,24 @@ const Post = (post) => {
         opacity: post.props.deleted ? 0.9 : 1,
       }}
     >
+      {post?.props?.sticky && (
+        <Box
+          sx={{
+            width: {
+              xs: '100%',
+              md: '2px',
+            },
+            height: {
+              xs: '2px',
+              md: 'unset',
+            },
+            // borderTop: '4px dashed',
+            backgroundColor: 'info.main',
+          }}
+        ></Box>
+      )}
       <Grid container>
-        {post?.props?.sticky && (
-          <Box
-            sx={{
-              width: {
-                xs: '100%',
-                md: '2px',
-              },
-              height: {
-                xs: '2px',
-                md: 'unset',
-              },
-              // borderTop: '4px dashed',
-              backgroundColor: 'info.main',
-            }}
-          ></Box>
-        )}
-        <Grid item order={{ xs: 2, md: 0 }}>
+        <Grid item order={{ xs: 2, md: 0 }} xs={12} md={3}>
           <FlexBox sx={{ flexDirection: 'column', gap: 1, minWidth: 200 }}>
             <PostOverviewMeta
               plainText={false}
@@ -154,7 +154,7 @@ const Post = (post) => {
             />
           </FlexBox>
         </Grid>
-        <Grid item sx={{ maxWidth: '100%' }}>
+        <Grid item xs={12} md={9}>
           <Box>
             <CardHeader
               title={
