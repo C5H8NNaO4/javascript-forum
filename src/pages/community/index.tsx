@@ -128,10 +128,21 @@ export const CommunityPage = () => {
   );
 };
 
+const qa = `
+- **Can I ask Questions?**   
+Yes, you can ask any questions about JavaScript
+- **Will they be answered?**  
+Yes. As long the traffic is low, I will try to answer questions about JS / React.
+`;
 export const ForumRules = () => {
+  const [expanded, setExpanded] = useState(0);
   return (
     <StickyCard top={64}>
-      <Accordion defaultExpanded={true}>
+      <Accordion
+        defaultExpanded={true}
+        expanded={expanded === 0}
+        onChange={() => setExpanded(expanded === 0 ? -1 : 0)}
+      >
         <AccordionSummary
           sx={{
             minHeight: '48px !important',
@@ -143,6 +154,21 @@ export const ForumRules = () => {
           <Markdown center={false} src={FORUM_RULES_GH}>
             Error Loading Rules
           </Markdown>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion
+        expanded={expanded === 1}
+        onChange={() => setExpanded(expanded === 1 ? -1 : 1)}
+      >
+        <AccordionSummary
+          sx={{
+            minHeight: '48px !important',
+          }}
+        >
+          Q & A
+        </AccordionSummary>
+        <AccordionDetails>
+          <Markdown center={false}>{qa}</Markdown>
         </AccordionDetails>
       </Accordion>
 
