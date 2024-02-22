@@ -47,7 +47,6 @@ export const CommunityPage = () => {
       ?.scrollTo({ top: 0, behavior: 'smooth' });
   }, [page]);
 
-  const [ref, isOffScreen] = useIsOffScreen();
   return (
     <Container maxWidth="lg" disableGutters>
       <Card
@@ -62,9 +61,9 @@ export const CommunityPage = () => {
         }}
       >
         {/* <Markdown src={getRawPath(PAGE_SRC)}>*Loading*</Markdown> */}
-        <Box ref={ref}>
-          <Header pageSize={pageSize} setPageSize={setPageSize} />
-        </Box>
+
+        <Header pageSize={pageSize} setPageSize={setPageSize} />
+
         <CardContent>
           {document.getElementById('progress') &&
             createPortal(
@@ -106,11 +105,10 @@ export const CommunityPage = () => {
                     Error Loading Rules
                   </Markdown>
                 </CardContent>
-                {isOffScreen && (
-                  <CardActions>
-                    <NewPostButton sx={{ marginLeft: '0px' }} />
-                  </CardActions>
-                )}
+
+                <CardActions>
+                  <NewPostButton sx={{ marginLeft: '0px' }} />
+                </CardActions>
               </StickyCard>
             </Grid>
           </Grid>
@@ -372,7 +370,6 @@ const Header = ({ pageSize, setPageSize }) => {
         justifyContent: 'center',
         alignContent: 'center',
       }}
-      action={<NewPostButton />}
     ></CardHeader>
   );
 };
