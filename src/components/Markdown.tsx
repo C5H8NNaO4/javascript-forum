@@ -177,15 +177,13 @@ export const Markdown = ({
           .replace(/[^\w\s]/g, '') // Remove special characters
           .replace(/\s+/g, '-'); // Replace spaces with hyphens
 
-        if (preview)
-          return createElement('b', { id: anchor || undefined }, children);
         return createElement(
           props?.node?.tagName,
           { id: anchor || undefined },
           children
         );
       }
-      if (preview) return createElement('b', {}, children);
+
       return createElement(props?.node?.tagName, {}, children);
     },
     [preview]
@@ -233,7 +231,7 @@ export const Markdown = ({
           const url = props?.children?.props?.children;
 
           return (
-            <Markdown src={url} key={url} center={false}>
+            <Markdown src={url} key={url} center={false} preview={preview}>
               {`Loading Markdown from Github: ${url}`}
             </Markdown>
           );
@@ -249,6 +247,7 @@ export const Markdown = ({
               disablePadding
               fetchFn={FetchSOAnswerById(id, url)}
               cacheKey={id}
+              preview={preview}
             >
               {`*See this Stackoverflow answer: [${url}](${url})`}
             </Markdown>
@@ -358,6 +357,7 @@ export const Markdown = ({
               errorMD={trimmed}
               fetchFn={FetchSOAnswerById(id, url)}
               cacheKey={id}
+              preview={preview}
             >
               {`*See this Stackoverflow answer: [${url}](${url})`}
             </Markdown>
@@ -370,7 +370,13 @@ export const Markdown = ({
           typeof children === 'string' ? children.trim() : children;
 
         return (
-          <Markdown src={url} key={url} center={false} errorMD={trimmed}>
+          <Markdown
+            src={url}
+            key={url}
+            center={false}
+            errorMD={trimmed}
+            preview={preview}
+          >
             {`Loading Markdown from Github: ${url}`}
           </Markdown>
         );

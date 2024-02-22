@@ -185,6 +185,16 @@ pre {
   max-width: 100%;
 }
 
+.markdown.preview > :is(h1, h2, h3, h4, h5, h6) {
+  font-size: 1.4rem;
+  margin: 0px;
+  font-weight: 500;
+}
+
+.markdown.preview > p {
+  margin: 0px;
+}
+
 .markdown.center > :is(h1, h2, h3, h4, h5, h6) {
   text-align: center;
   max-width: 40ch;
