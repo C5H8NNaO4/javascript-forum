@@ -28,6 +28,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import Snackbar from '@mui/material/Snackbar';
 import HeartIcon from '@mui/icons-material/Favorite';
 import { useComponent, useLocalStorage } from '@state-less/react-client';
+import { StickyContainer } from 'react-sticky';
 
 import { SidebarNavigation } from '../components/SidebarNavigation';
 import { routes } from '../routes';
@@ -160,286 +161,293 @@ export const Layout = () => {
       enabled={_animated === 2}
       bg={_animated}
     >
-      <Box
-        key={pathname}
-        sx={{
-          maxHeight: '100vh',
-          height: '100%',
-          overflowY: 'auto',
-          overflowX: 'hidden',
-          zIndex: 1,
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        {
-          <header>
-            <ButtonAppBar />
+      <StickyContainer style={{ height: '100%' }}>
+        <Box
+          id="scroll"
+          key={pathname}
+          sx={{
+            maxHeight: '100vh',
+            height: '100%',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            zIndex: 1,
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          {
+            <header>
+              <ButtonAppBar />
 
-            <Box
-              sx={{
-                mt: {
-                  xs: 6,
-                  sm: 8,
-                },
-              }}
-            />
-            <div
-              id="loading-container"
-              style={{ display: 'flex', width: '100%' }}
-            />
-          </header>
-        }
-        <main>
-          <SidebarNavigation />
-          {!state.fullscreen && state.alerts.info?.length > 0 && (
-            <Alert
-              severity="info"
-              // sx={{ mt: 8 }}
-              action={
-                <Button>
-                  <Link component={RouterLink} to="/changes">
-                    Changes
-                  </Link>
-                </Button>
-              }
-            >
-              {time < 1000 ? messages[1] : messages[3]}
-            </Alert>
-          )}
-          {cookieConsent === null && (
-            <Alert
-              severity="info"
-              action={
-                <>
-                  <PrankButton>
-                    <Button
-                      color="error"
-                      onClick={() => {
-                        setCookieConsent(false);
-                      }}
-                    >
-                      Deny
-                    </Button>
-                  </PrankButton>
-                  <Button
-                    color="success"
-                    onClick={() => {
-                      setCookieConsent(true);
-                    }}
-                  >
-                    Accept
-                  </Button>
-                </>
-              }
-            >
-              We use Google Analytics to track page views.
-            </Alert>
-          )}
-          <div id="app-warnings" />
-
-          {state.messages.map((message) => {
-            return (
-              <Snackbar
-                open={true}
-                autoHideDuration={6000}
-                onClose={() => dispatch({ type: Actions.HIDE_MESSAGE })}
-                message={message.message}
-                action={
-                  message.action ? (
-                    <SingleClickButton
-                      onClick={() => {
-                        message?.action?.();
-                        dispatch({ type: Actions.HIDE_MESSAGE });
-                      }}
-                    >
-                      Undo
-                    </SingleClickButton>
-                  ) : undefined
-                }
+              <Box
+                sx={{
+                  mt: {
+                    xs: 6,
+                    sm: 8,
+                  },
+                }}
               />
-            );
-          })}
-          <Routes>{routes}</Routes>
-        </main>
-        {!state.fullscreen && (
-          <footer style={{ marginTop: 'auto' }}>
-            <Paper
-              square
-              sx={{
-                padding: {
-                  xs: 0,
-                  sm: 1,
-                  md: 2,
-                },
-                mt: 16,
-                backgroundColor: 'primary.main',
-              }}
-            >
-              <Typography variant="body2" color="textSecondary" align="center">
-                <Link href="https://state-less.cloud">
-                  © 2023 React Server
-                </Link>
-              </Typography>
-              <Grid container spacing={1} justifyContent="center">
-                <Grid item xs={12} sm={6} md={4} xl={2}>
-                  <Card
-                    sx={{ m: 1, mb: 0, bgcolor: 'secondary.main' }}
-                    elevation={0}
-                  >
-                    <CardHeader title="Social"></CardHeader>
-                    <CardContent>
-                      <div className={styles.impressum}>
-                        <List disablePadding>
-                          <ListItem dense>
-                            <ListItemIcon>
-                              <GitHubIcon />
-                            </ListItemIcon>
-                            <ListItemText>
-                              <Link
-                                component={RouterLink}
-                                to="https://github.com/state-less/react-server"
-                              >
-                                Github
-                              </Link>
-                            </ListItemText>
-                          </ListItem>
+              <div
+                id="loading-container"
+                style={{ display: 'flex', width: '100%' }}
+              />
+            </header>
+          }
+          <main>
+            <SidebarNavigation />
+            {!state.fullscreen && state.alerts.info?.length > 0 && (
+              <Alert
+                severity="info"
+                // sx={{ mt: 8 }}
+                action={
+                  <Button>
+                    <Link component={RouterLink} to="/changes">
+                      Changes
+                    </Link>
+                  </Button>
+                }
+              >
+                {time < 1000 ? messages[1] : messages[3]}
+              </Alert>
+            )}
+            {cookieConsent === null && (
+              <Alert
+                severity="info"
+                action={
+                  <>
+                    <PrankButton>
+                      <Button
+                        color="error"
+                        onClick={() => {
+                          setCookieConsent(false);
+                        }}
+                      >
+                        Deny
+                      </Button>
+                    </PrankButton>
+                    <Button
+                      color="success"
+                      onClick={() => {
+                        setCookieConsent(true);
+                      }}
+                    >
+                      Accept
+                    </Button>
+                  </>
+                }
+              >
+                We use Google Analytics to track page views.
+              </Alert>
+            )}
+            <div id="app-warnings" />
 
-                          <ListItem dense>
-                            <ListItemIcon>
-                              <TwitterIcon />
-                            </ListItemIcon>
-                            <ListItemText>
-                              <Link
-                                component={RouterLink}
-                                to="https://twitter.com/statelesscloud"
-                              >
-                                Twitter
-                              </Link>
-                            </ListItemText>
-                          </ListItem>
-                          <ListItem dense>
-                            <ListItemIcon>
-                              <ChatIcon />
-                            </ListItemIcon>
-                            <ListItemText>
-                              <Link
-                                component={RouterLink}
-                                to="https://discord.gg/vbEhvfKPFY"
-                              >
-                                Discord
-                              </Link>
-                            </ListItemText>
-                          </ListItem>
-                          <ListItem dense>
-                            <ListItemIcon>
-                              <ChatIcon />
-                            </ListItemIcon>
-                            <ListItemText>
-                              <Link
-                                component={RouterLink}
-                                to="ircs://irc.eu.libera.chat/react-server"
-                              >
-                                IRC (Libera): #react-server
-                              </Link>
-                            </ListItemText>
-                          </ListItem>
-                        </List>
-                      </div>
-                    </CardContent>
-                  </Card>
+            {state.messages.map((message) => {
+              return (
+                <Snackbar
+                  open={true}
+                  autoHideDuration={6000}
+                  onClose={() => dispatch({ type: Actions.HIDE_MESSAGE })}
+                  message={message.message}
+                  action={
+                    message.action ? (
+                      <SingleClickButton
+                        onClick={() => {
+                          message?.action?.();
+                          dispatch({ type: Actions.HIDE_MESSAGE });
+                        }}
+                      >
+                        Undo
+                      </SingleClickButton>
+                    ) : undefined
+                  }
+                />
+              );
+            })}
+            <Routes>{routes}</Routes>
+          </main>
+          {!state.fullscreen && (
+            <footer style={{ marginTop: 'auto' }}>
+              <Paper
+                square
+                sx={{
+                  padding: {
+                    xs: 0,
+                    sm: 1,
+                    md: 2,
+                  },
+                  mt: 16,
+                  backgroundColor: 'primary.main',
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  color="textSecondary"
+                  align="center"
+                >
+                  <Link href="https://state-less.cloud">
+                    © 2023 React Server
+                  </Link>
+                </Typography>
+                <Grid container spacing={1} justifyContent="center">
+                  <Grid item xs={12} sm={6} md={4} xl={2}>
+                    <Card
+                      sx={{ m: 1, mb: 0, bgcolor: 'secondary.main' }}
+                      elevation={0}
+                    >
+                      <CardHeader title="Social"></CardHeader>
+                      <CardContent>
+                        <div className={styles.impressum}>
+                          <List disablePadding>
+                            <ListItem dense>
+                              <ListItemIcon>
+                                <GitHubIcon />
+                              </ListItemIcon>
+                              <ListItemText>
+                                <Link
+                                  component={RouterLink}
+                                  to="https://github.com/state-less/react-server"
+                                >
+                                  Github
+                                </Link>
+                              </ListItemText>
+                            </ListItem>
+
+                            <ListItem dense>
+                              <ListItemIcon>
+                                <TwitterIcon />
+                              </ListItemIcon>
+                              <ListItemText>
+                                <Link
+                                  component={RouterLink}
+                                  to="https://twitter.com/statelesscloud"
+                                >
+                                  Twitter
+                                </Link>
+                              </ListItemText>
+                            </ListItem>
+                            <ListItem dense>
+                              <ListItemIcon>
+                                <ChatIcon />
+                              </ListItemIcon>
+                              <ListItemText>
+                                <Link
+                                  component={RouterLink}
+                                  to="https://discord.gg/vbEhvfKPFY"
+                                >
+                                  Discord
+                                </Link>
+                              </ListItemText>
+                            </ListItem>
+                            <ListItem dense>
+                              <ListItemIcon>
+                                <ChatIcon />
+                              </ListItemIcon>
+                              <ListItemText>
+                                <Link
+                                  component={RouterLink}
+                                  to="ircs://irc.eu.libera.chat/react-server"
+                                >
+                                  IRC (Libera): #react-server
+                                </Link>
+                              </ListItemText>
+                            </ListItem>
+                          </List>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} xl={2}>
+                    <Card
+                      sx={{ m: 1, mb: 0, bgcolor: 'secondary.main' }}
+                      elevation={0}
+                    >
+                      <CardHeader title="Contact"></CardHeader>
+                      <CardContent>
+                        <div className={styles.impressum}>
+                          <List disablePadding>
+                            <ListItem dense>
+                              <ListItemIcon>
+                                <EmailIcon />
+                              </ListItemIcon>
+                              <ListItemText>
+                                <Link
+                                  component={RouterLink}
+                                  to={`mailto:${CONTACT_MAIL}`}
+                                >
+                                  {CONTACT_MAIL}
+                                </Link>
+                              </ListItemText>
+                            </ListItem>
+                          </List>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} xl={2}>
+                    <Card
+                      square
+                      sx={{
+                        marginTop: 1,
+                        boxShadow: { xs: '10px 0px 8px 1px', sm: 'none' },
+                        bgcolor: 'secondary.main',
+                      }}
+                    >
+                      <CardHeader title="More"></CardHeader>
+                      <CardContent>
+                        <div className={styles.impressum}>
+                          <List disablePadding>
+                            <ListItem dense>
+                              <ListItemIcon>
+                                <QuestionMarkIcon />
+                              </ListItemIcon>
+                              <ListItemText>
+                                <Link component={RouterLink} to="/faq">
+                                  FAQ
+                                </Link>
+                              </ListItemText>
+                            </ListItem>
+                            <ListItem dense>
+                              <ListItemIcon>
+                                <GroupsIcon />
+                              </ListItemIcon>
+                              <ListItemText>
+                                <Link
+                                  component={RouterLink}
+                                  to={GITHUB_CONTRIBUTE}
+                                >
+                                  Contribute
+                                </Link>
+                              </ListItemText>
+                            </ListItem>
+                            <ListItem dense>
+                              <ListItemIcon>
+                                <HeartIcon />
+                              </ListItemIcon>
+                              <ListItemText>
+                                <Link
+                                  component={RouterLink}
+                                  to="https://github.com/sponsors/state-less"
+                                >
+                                  Sponsor
+                                </Link>
+                              </ListItemText>
+                            </ListItem>
+                            <ViewCounter
+                              textColor="primary.main"
+                              componentKey="js-forum-views"
+                            />
+                          </List>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} sm={6} md={4} xl={2}>
-                  <Card
-                    sx={{ m: 1, mb: 0, bgcolor: 'secondary.main' }}
-                    elevation={0}
-                  >
-                    <CardHeader title="Contact"></CardHeader>
-                    <CardContent>
-                      <div className={styles.impressum}>
-                        <List disablePadding>
-                          <ListItem dense>
-                            <ListItemIcon>
-                              <EmailIcon />
-                            </ListItemIcon>
-                            <ListItemText>
-                              <Link
-                                component={RouterLink}
-                                to={`mailto:${CONTACT_MAIL}`}
-                              >
-                                {CONTACT_MAIL}
-                              </Link>
-                            </ListItemText>
-                          </ListItem>
-                        </List>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item xs={12} sm={6} md={4} xl={2}>
-                  <Card
-                    square
-                    sx={{
-                      marginTop: 1,
-                      boxShadow: { xs: '10px 0px 8px 1px', sm: 'none' },
-                      bgcolor: 'secondary.main',
-                    }}
-                  >
-                    <CardHeader title="More"></CardHeader>
-                    <CardContent>
-                      <div className={styles.impressum}>
-                        <List disablePadding>
-                          <ListItem dense>
-                            <ListItemIcon>
-                              <QuestionMarkIcon />
-                            </ListItemIcon>
-                            <ListItemText>
-                              <Link component={RouterLink} to="/faq">
-                                FAQ
-                              </Link>
-                            </ListItemText>
-                          </ListItem>
-                          <ListItem dense>
-                            <ListItemIcon>
-                              <GroupsIcon />
-                            </ListItemIcon>
-                            <ListItemText>
-                              <Link
-                                component={RouterLink}
-                                to={GITHUB_CONTRIBUTE}
-                              >
-                                Contribute
-                              </Link>
-                            </ListItemText>
-                          </ListItem>
-                          <ListItem dense>
-                            <ListItemIcon>
-                              <HeartIcon />
-                            </ListItemIcon>
-                            <ListItemText>
-                              <Link
-                                component={RouterLink}
-                                to="https://github.com/sponsors/state-less"
-                              >
-                                Sponsor
-                              </Link>
-                            </ListItemText>
-                          </ListItem>
-                          <ViewCounter
-                            textColor="primary.main"
-                            componentKey="js-forum-views"
-                          />
-                        </List>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              </Grid>
-            </Paper>
-          </footer>
-        )}
-      </Box>
+              </Paper>
+            </footer>
+          )}
+        </Box>
+      </StickyContainer>
     </VantaBackground>
   );
 };

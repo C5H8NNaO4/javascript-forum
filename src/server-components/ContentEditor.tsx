@@ -139,7 +139,7 @@ export const OwnerChip = ({ owner, sx = {} }) => {
   return (
     <Chip
       avatar={<Avatar src={picture} />}
-      sx={{ marginLeft: 'auto !important', mr: 3 }}
+      sx={{ marginLeft: 'auto !important', mr: 3, ...sx }}
       label={name}
     />
   );

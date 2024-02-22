@@ -12,7 +12,11 @@ import {
   LinearProgress,
   IconButton,
 } from '@mui/material';
-import { useComponent, useLocalStorage } from '@state-less/react-client';
+import {
+  authContext,
+  useComponent,
+  useLocalStorage,
+} from '@state-less/react-client';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState, useRef, useContext } from 'react';
 import Visibility from '@mui/icons-material/Visibility';
@@ -25,6 +29,7 @@ import { FlexBox } from '../../components/FlexBox';
 import {
   AnswerActions,
   ContentEditor,
+  OwnerChip,
   PostActions,
 } from '../../server-components/ContentEditor';
 import { Actions, stateContext } from '../../provider/StateProvider';
@@ -32,6 +37,7 @@ import { Actions, stateContext } from '../../provider/StateProvider';
 import { NewPost } from './newPost';
 
 import { NewPostButton } from '.';
+import { GoogleLoginButton } from '../../components/LoggedInGoogleButton';
 
 export const PostsPage = () => {
   const params = useParams();
@@ -268,6 +274,7 @@ const Answer = ({ answer }) => {
 };
 
 const ComposeAnswer = ({ id }) => {
+  const { session } = useContext(authContext);
   const [component] = useComponent(id);
   const [body, setBody] = useState('');
   return (
@@ -292,6 +299,13 @@ const ComposeAnswer = ({ id }) => {
         >
           Post Answer
         </Button>
+        {session?.id && (
+          <OwnerChip
+            sx={{ marginLeft: 1 }}
+            owner={session?.strategies[session?.strategy]?.decoded}
+          />
+        )}
+        {!session?.id && <GoogleLoginButton />}
       </CardActions>
     </Card>
   );

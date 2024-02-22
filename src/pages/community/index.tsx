@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { useComponent, useLocalStorage } from '@state-less/react-client';
 import { Link as RouterLink } from 'react-router-dom';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { Markdown } from '../../components/Markdown';
@@ -95,7 +95,8 @@ export const CommunityPage = () => {
                 md: 1,
               }}
             >
-              <Card
+              <StickyCard
+                top={64}
                 sx={{
                   position: 'sticky',
                   top: '72px',
@@ -109,7 +110,7 @@ export const CommunityPage = () => {
                     Error Loading Rules
                   </Markdown>
                 </CardContent>
-              </Card>
+              </StickyCard>
             </Grid>
           </Grid>
         </CardContent>
@@ -128,6 +129,33 @@ export const CommunityPage = () => {
       </Card>
     </Container>
   );
+};
+
+export const StickyCard = (props) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [mt, setMt] = useState<string>('0px');
+  const stickyRect = useMemo(() => {
+    return ref?.current?.getBoundingClientRect();
+  }, [ref?.current]);
+  useEffect(() => {
+    if (!ref?.current) return;
+    document.getElementById('scroll')?.addEventListener('scroll', (e: any) => {
+      const scrollTop = e?.target?.scrollTop || 0;
+      const bottom =
+        8 + scrollTop + ref?.current?.getBoundingClientRect()?.height;
+
+      if (
+        bottom - props.top <
+        (ref?.current?.parentElement?.getBoundingClientRect?.()?.height || 0)
+      ) {
+        const top = Math.max(0, scrollTop - props.top) + 'px';
+        if (ref.current) {
+          ref.current.style.transform = `translateY(${top})`;
+        }
+      }
+    });
+  }, [ref?.current]);
+  return <Card ref={ref}>{props.children}</Card>;
 };
 
 const Post = (post) => {
