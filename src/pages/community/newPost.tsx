@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router';
 
 import { FlexBox } from '../../components/FlexBox';
 import { FORUM_KEY } from '../../lib/config';
+import { ContentEditor } from '../../server-components/ContentEditor';
 
 export const Tags = ({ onChange }) => {
   const [tags, setTags] = useState<Array<string>>([]);
@@ -70,7 +71,7 @@ export const Tags = ({ onChange }) => {
 export const NewPost = () => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-  const [component] = useComponent(FORUM_KEY);
+  const [component, { loading }] = useComponent(FORUM_KEY);
   const [tags, setTags] = useState([]);
   const navigate = useNavigate();
   return (
@@ -99,15 +100,16 @@ export const NewPost = () => {
             Include all the information someone would need to understand the
             topic.
           </Typography>
-          <TextField
-            fullWidth
-            multiline
-            rows={7}
-            color="secondary"
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-          />
         </CardContent>
+        <ContentEditor
+          body={body}
+          setBody={setBody}
+          draft
+          edit={true}
+          loading={loading}
+          setEdit={null}
+          component={component}
+        />
         <CardContent>
           <Typography variant="h6">Tags</Typography>
           <Tags onChange={setTags} />
