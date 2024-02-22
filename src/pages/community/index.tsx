@@ -14,7 +14,6 @@ import {
   LinearProgress,
   MenuItem,
   Select,
-  CardActionArea,
 } from '@mui/material';
 import { useComponent, useLocalStorage } from '@state-less/react-client';
 import { Link as RouterLink } from 'react-router-dom';
@@ -27,7 +26,6 @@ import { calc } from '../../server-components/examples/VotingApp';
 import { PAGE_SIZE_POSTS, PAGE_START } from '../../lib/const';
 import { ViewCounter } from '../../server-components/examples/ViewCounter';
 import { FORUM_BASE_PATH, FORUM_KEY, FORUM_RULES_GH } from '../../lib/config';
-import RulesMD from './static/Rules.md';
 
 export const CommunityPage = () => {
   const [page, setPage] = useState(PAGE_START);
