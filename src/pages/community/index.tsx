@@ -26,6 +26,7 @@ import { calc } from '../../server-components/examples/VotingApp';
 import { PAGE_SIZE_POSTS, PAGE_START } from '../../lib/const';
 import { ViewCounter } from '../../server-components/examples/ViewCounter';
 import { FORUM_BASE_PATH, FORUM_KEY, FORUM_RULES_GH } from '../../lib/config';
+import { useIsOffScreen } from '../../lib/hooks';
 
 export const CommunityPage = () => {
   const [page, setPage] = useState(PAGE_START);
@@ -46,6 +47,7 @@ export const CommunityPage = () => {
       ?.scrollTo({ top: 0, behavior: 'smooth' });
   }, [page]);
 
+  const [ref, isOffScreen] = useIsOffScreen();
   return (
     <Container maxWidth="lg" disableGutters>
       <Card
@@ -60,7 +62,9 @@ export const CommunityPage = () => {
         }}
       >
         {/* <Markdown src={getRawPath(PAGE_SRC)}>*Loading*</Markdown> */}
-        <Header pageSize={pageSize} setPageSize={setPageSize} />
+        <Box ref={ref}>
+          <Header pageSize={pageSize} setPageSize={setPageSize} />
+        </Box>
         <CardContent>
           {document.getElementById('progress') &&
             createPortal(
@@ -102,6 +106,11 @@ export const CommunityPage = () => {
                     Error Loading Rules
                   </Markdown>
                 </CardContent>
+                {isOffScreen && (
+                  <CardActions>
+                    <NewPostButton sx={{ marginLeft: '0px' }} />
+                  </CardActions>
+                )}
               </StickyCard>
             </Grid>
           </Grid>
@@ -383,9 +392,9 @@ export const PageSize = ({ pageSize, setPageSize }) => {
     </Select>
   );
 };
-export const NewPostButton = () => {
+export const NewPostButton = ({ sx }) => {
   return (
-    <Button variant="contained" color="secondary" sx={{ ml: 'auto' }}>
+    <Button variant="contained" color="secondary" sx={{ ml: 'auto', ...sx }}>
       <Link
         to={`${FORUM_BASE_PATH}/new`}
         component={RouterLink}

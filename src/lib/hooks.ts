@@ -46,3 +46,30 @@ export const useSyncedState = (
 
   return [localValue, setValue, { loading }];
 };
+
+export const useIsOffScreen = () => {
+  const [isOffScreen, setIsOffScreen] = useState(false);
+
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!ref?.current) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setIsOffScreen(true);
+        } else if (entries[0]?.boundingClientRect?.y > 0) {
+          setIsOffScreen(false);
+        }
+      },
+      {
+        root: document.body,
+        rootMargin: '0px 0px -100%',
+        threshold: 0.0,
+      }
+    );
+    obs.observe(ref?.current);
+  }, [setIsOffScreen]);
+
+  return [ref, isOffScreen];
+};
