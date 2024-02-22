@@ -435,14 +435,14 @@ export const PageSize = ({ pageSize, setPageSize }) => {
 };
 export const NewPostButton = ({ sx }: { sx?: BoxProps['sx'] }) => {
   return (
-    <Button variant="contained" color="secondary" sx={sx}>
-      <Link
-        to={`${FORUM_BASE_PATH}/new`}
-        component={RouterLink}
-        color={'#EEEEEE'}
-      >
+    <Link
+      to={`${FORUM_BASE_PATH}/new`}
+      component={RouterLink}
+      color={'#EEEEEE'}
+    >
+      <Button variant="contained" color="secondary" sx={sx}>
         Ask Question
-      </Link>
-    </Button>
+      </Button>
+    </Link>
   );
 };
