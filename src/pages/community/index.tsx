@@ -14,6 +14,7 @@ import {
   LinearProgress,
   MenuItem,
   Select,
+  BoxProps,
 } from '@mui/material';
 import { useComponent, useLocalStorage } from '@state-less/react-client';
 import { Link as RouterLink } from 'react-router-dom';
@@ -62,7 +63,7 @@ export const CommunityPage = () => {
       >
         {/* <Markdown src={getRawPath(PAGE_SRC)}>*Loading*</Markdown> */}
 
-        <Header pageSize={pageSize} setPageSize={setPageSize} />
+        <Header />
 
         <CardContent>
           {document.getElementById('progress') &&
@@ -107,7 +108,7 @@ export const CommunityPage = () => {
                 </CardContent>
 
                 <CardActions>
-                  <NewPostButton sx={{ marginLeft: '0px' }} />
+                  <NewPostButton />
                 </CardActions>
               </StickyCard>
             </Grid>
@@ -356,7 +357,7 @@ const Posts = ({ component }) => {
     </FlexBox>
   );
 };
-const Header = ({ pageSize, setPageSize }) => {
+const Header = () => {
   return (
     <CardHeader
       title={
@@ -389,9 +390,9 @@ export const PageSize = ({ pageSize, setPageSize }) => {
     </Select>
   );
 };
-export const NewPostButton = ({ sx }) => {
+export const NewPostButton = ({ sx }: { sx?: BoxProps['sx'] }) => {
   return (
-    <Button variant="contained" color="secondary" sx={{ ml: 'auto', ...sx }}>
+    <Button variant="contained" color="secondary" sx={sx}>
       <Link
         to={`${FORUM_BASE_PATH}/new`}
         component={RouterLink}
