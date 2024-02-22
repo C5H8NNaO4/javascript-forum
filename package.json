@@ -30,6 +30,7 @@
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.0",
     "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-markdown": "^2.2.0",
     "vite-plugin-pwa": "^0.17.5"
   },
   "devDependencies": {

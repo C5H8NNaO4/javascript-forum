@@ -14,6 +14,7 @@ import {
   LinearProgress,
   MenuItem,
   Select,
+  CardActionArea,
 } from '@mui/material';
 import { useComponent, useLocalStorage } from '@state-less/react-client';
 import { Link as RouterLink } from 'react-router-dom';
@@ -25,7 +26,8 @@ import { FlexBox } from '../../components/FlexBox';
 import { calc } from '../../server-components/examples/VotingApp';
 import { PAGE_SIZE_POSTS, PAGE_START } from '../../lib/const';
 import { ViewCounter } from '../../server-components/examples/ViewCounter';
-import { FORUM_BASE_PATH, FORUM_KEY } from '../../lib/config';
+import { FORUM_BASE_PATH, FORUM_KEY, FORUM_RULES_GH } from '../../lib/config';
+import RulesMD from './static/Rules.md';
 
 export const CommunityPage = () => {
   const [page, setPage] = useState(PAGE_START);
@@ -50,6 +52,7 @@ export const CommunityPage = () => {
     <Container maxWidth="lg" disableGutters>
       <Card
         sx={{
+          boxShadow: '0 2px 2px -2px gray;',
           px: {
             xs: 0,
             sm: 2,
@@ -73,14 +76,56 @@ export const CommunityPage = () => {
               ),
               document.getElementById('progress')!
             )}
-          <Posts component={component} />
+          <Grid container spacing={2}>
+            <Grid
+              item
+              xs={12}
+              md={9}
+              order={{
+                xs: 1,
+                md: 0,
+              }}
+            >
+              <Posts component={component} />
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              md={3}
+              order={{
+                xs: 0,
+                md: 1,
+              }}
+            >
+              <Card
+                sx={{
+                  position: 'sticky',
+                  top: '72px',
+                  flexShrink: 1,
+                  height: 'min-content',
+                  alignSelf: 'baseline',
+                }}
+              >
+                <CardContent>
+                  <Markdown center={false} src={FORUM_RULES_GH}>
+                    Error Loading Rules
+                  </Markdown>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
         </CardContent>
-        <CardActions>
+
+        <CardActions
+          sx={{ boxShadow: '0px 0px 2px 0px black', display: 'flex' }}
+        >
           <Pagination
             count={Math.ceil(component?.props?.totalCount / pageSize) || 0}
             page={page}
             onChange={(_, p) => setPage(p)}
           />
+
+          <PageSize pageSize={pageSize} setPageSize={setPageSize} />
         </CardActions>
       </Card>
     </Container>
@@ -272,7 +317,7 @@ const Posts = ({ component }) => {
           return <Post {...post} />;
         })}
       </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
         {nonSticky.map((post) => {
           return <Post {...post} />;
         })}
@@ -286,17 +331,6 @@ const Header = ({ pageSize, setPageSize }) => {
       title={
         <FlexBox sx={{ alignItems: 'center' }}>
           <Typography variant="h5">All Questions</Typography>
-          <Select
-            size="small"
-            value={pageSize}
-            onChange={(e) => setPageSize(e.target.value)}
-            sx={{ ml: 'auto', mr: 2 }}
-          >
-            <MenuItem value={5}>5</MenuItem>
-            <MenuItem value={15}>15</MenuItem>
-            <MenuItem value={25}>25</MenuItem>
-            <MenuItem value={50}>50</MenuItem>
-          </Select>
         </FlexBox>
       }
       sx={{
@@ -310,6 +344,21 @@ const Header = ({ pageSize, setPageSize }) => {
   );
 };
 
+export const PageSize = ({ pageSize, setPageSize }) => {
+  return (
+    <Select
+      size="small"
+      value={pageSize}
+      onChange={(e) => setPageSize(e.target.value)}
+      sx={{ ml: 'auto', mr: 2 }}
+    >
+      <MenuItem value={5}>5</MenuItem>
+      <MenuItem value={15}>15</MenuItem>
+      <MenuItem value={25}>25</MenuItem>
+      <MenuItem value={50}>50</MenuItem>
+    </Select>
+  );
+};
 export const NewPostButton = () => {
   return (
     <Button variant="contained" color="secondary" sx={{ ml: 'auto' }}>

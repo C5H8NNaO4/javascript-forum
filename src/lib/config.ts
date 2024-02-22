@@ -7,3 +7,6 @@ export const COPYRIGHT_WEBSITE = 'https://state-less.cloud';
 export const COPYRIGHT_HOLDER = 'state-less.cloud';
 
 export const USE_PROD_CLIENT = true;
+
+export const FORUM_RULES_GH =
+  'https://raw.githubusercontent.com/state-less/javascript.forum/main/Rules.md';
