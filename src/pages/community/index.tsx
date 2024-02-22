@@ -56,6 +56,7 @@ export const CommunityPage = () => {
             sm: 2,
             md: 4,
           },
+          mb: '1px',
         }}
       >
         {/* <Markdown src={getRawPath(PAGE_SRC)}>*Loading*</Markdown> */}
@@ -95,16 +96,7 @@ export const CommunityPage = () => {
                 md: 1,
               }}
             >
-              <StickyCard
-                top={64}
-                sx={{
-                  position: 'sticky',
-                  top: '72px',
-                  flexShrink: 1,
-                  height: 'min-content',
-                  alignSelf: 'baseline',
-                }}
-              >
+              <StickyCard top={64}>
                 <CardContent>
                   <Markdown center={false} src={FORUM_RULES_GH}>
                     Error Loading Rules
@@ -116,7 +108,11 @@ export const CommunityPage = () => {
         </CardContent>
 
         <CardActions
-          sx={{ boxShadow: '0px 0px 2px 0px black', display: 'flex' }}
+          sx={{
+            boxShadow: '0px 0px 2px 0px black',
+            display: 'flex',
+            mt: 4,
+          }}
         >
           <Pagination
             count={Math.ceil(component?.props?.totalCount / pageSize) || 0}
@@ -133,27 +129,27 @@ export const CommunityPage = () => {
 
 export const StickyCard = (props) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [mt, setMt] = useState<string>('0px');
-  const stickyRect = useMemo(() => {
-    return ref?.current?.getBoundingClientRect();
-  }, [ref?.current]);
+
   useEffect(() => {
     if (!ref?.current) return;
-    document.getElementById('scroll')?.addEventListener('scroll', (e: any) => {
+    const onScroll = (e: any) => {
       const scrollTop = e?.target?.scrollTop || 0;
-      const bottom =
-        8 + scrollTop + ref?.current?.getBoundingClientRect()?.height;
 
-      if (
-        bottom - props.top <
-        (ref?.current?.parentElement?.getBoundingClientRect?.()?.height || 0)
-      ) {
-        const top = Math.max(0, scrollTop - props.top) + 'px';
-        if (ref.current) {
-          ref.current.style.transform = `translateY(${top})`;
-        }
+      const max =
+        (ref?.current?.parentElement?.getBoundingClientRect?.()?.height || 0) -
+        (ref?.current?.getBoundingClientRect()?.height || 0) -
+        16;
+      const top = Math.min(max, Math.max(0, scrollTop - props.top)) + 'px';
+      if (ref.current) {
+        ref.current.style.transform = `translateY(${top})`;
       }
-    });
+    };
+    document.getElementById('scroll')?.addEventListener('scroll', onScroll);
+    return () => {
+      document
+        .getElementById('scroll')
+        ?.removeEventListener('scroll', onScroll);
+    };
   }, [ref?.current]);
   return <Card ref={ref}>{props.children}</Card>;
 };
@@ -338,11 +334,13 @@ const Posts = ({ component }) => {
 
   return (
     <FlexBox sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-        {sticky.map((post) => {
-          return <Post {...post} />;
-        })}
-      </Box>
+      {sticky?.length > 0 && (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+          {sticky.map((post) => {
+            return <Post {...post} />;
+          })}
+        </Box>
+      )}
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
         {nonSticky.map((post) => {
           return <Post {...post} />;

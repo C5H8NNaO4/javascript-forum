@@ -1,4 +1,4 @@
-export const PAGE_SIZE_POSTS = 5;
+export const PAGE_SIZE_POSTS = 15;
 export const PAGE_START = 1;
 
 export const CONTACT_PHONE = '+49 176 2035 0106';
