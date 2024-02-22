@@ -15,6 +15,9 @@ import {
   MenuItem,
   Select,
   BoxProps,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 import { useComponent, useLocalStorage } from '@state-less/react-client';
 import { Link as RouterLink } from 'react-router-dom';
@@ -100,17 +103,7 @@ export const CommunityPage = () => {
                 md: 1,
               }}
             >
-              <StickyCard top={64}>
-                <CardContent>
-                  <Markdown center={false} src={FORUM_RULES_GH}>
-                    Error Loading Rules
-                  </Markdown>
-                </CardContent>
-
-                <CardActions>
-                  <NewPostButton />
-                </CardActions>
-              </StickyCard>
+              <ForumRules />
             </Grid>
           </Grid>
         </CardContent>
@@ -135,6 +128,30 @@ export const CommunityPage = () => {
   );
 };
 
+export const ForumRules = () => {
+  return (
+    <StickyCard top={64}>
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary
+          sx={{
+            minHeight: '48px !important',
+          }}
+        >
+          Forum Rules
+        </AccordionSummary>
+        <AccordionDetails>
+          <Markdown center={false} src={FORUM_RULES_GH}>
+            Error Loading Rules
+          </Markdown>
+        </AccordionDetails>
+      </Accordion>
+
+      <CardActions>
+        <NewPostButton />
+      </CardActions>
+    </StickyCard>
+  );
+};
 export const StickyCard = (props) => {
   const ref = useRef<HTMLDivElement>(null);
 
