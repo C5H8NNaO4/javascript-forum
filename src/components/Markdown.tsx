@@ -160,17 +160,20 @@ export const Markdown = ({
 
   useEffect(() => {
     if (loading > 1 && hash) {
-      document
-        .querySelector(hash)
-        ?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      setTimeout(() => {
+        document
+          .querySelector(hash)
+          ?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }, 50);
     }
   }, [loading, hash]);
 
   const headingRenderer = useMemo(
     () => (props) => {
       const { children } = props;
-      const text = getChildText(props);
-      console.log('HEADING ANCHOR', text);
+      const text =
+        typeof children === 'string' ? children : getChildText(props);
+
       if (typeof text === 'string') {
         const anchor = (text || '')
           .toLowerCase()
