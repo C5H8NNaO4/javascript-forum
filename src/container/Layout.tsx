@@ -42,6 +42,8 @@ import { ViewCounter } from '../server-components/examples/ViewCounter';
 import { CONTACT_MAIL, GITHUB_CONTRIBUTE } from '../lib/const';
 
 import styles from './Layout.module.css';
+import { Copyright } from '../components/Copyright';
+import { VIEWS_KEY } from '../lib/config';
 declare let gtag: (
   _: string,
   __: string,
@@ -277,9 +279,7 @@ export const Layout = () => {
               }}
             >
               <Typography variant="body2" color="textSecondary" align="center">
-                <Link href="https://state-less.cloud">
-                  © 2023 React Server
-                </Link>
+                <Copyright backgroundColor="primary" />
               </Typography>
               <Grid container spacing={1} justifyContent="center">
                 <Grid item xs={12} sm={6} md={4} xl={2}>
@@ -427,7 +427,7 @@ export const Layout = () => {
                           </ListItem>
                           <ViewCounter
                             textColor="primary.main"
-                            componentKey="js-forum-views"
+                            componentKey={VIEWS_KEY}
                           />
                         </List>
                       </div>
