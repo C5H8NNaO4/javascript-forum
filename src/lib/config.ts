@@ -10,5 +10,5 @@ export const COPYRIGHT_HOLDER = 'React Server';
 
 export const USE_PROD_CLIENT = true;
 
-export const FORUM_RULES_GH =
-  'https://raw.githubusercontent.com/state-less/javascript.forum/main/Rules.md';
+export const FORUM_RULES_GH = import.meta.env.REACT_APP_FORUM_RULES_GH;
+export const FORUM_QA_GH = import.meta.env.REACT_APP_FORUM_QA_GH;
