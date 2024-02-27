@@ -15,6 +15,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.6",
     "@mui/material": "^5.15.6",
+    "@state-less/leap-frontend": "^0.0.1",
     "@state-less/react-client": "state-less/react-client",
     "copy-to-clipboard": "^3.3.3",
     "eslint-plugin-import": "^2.29.1",

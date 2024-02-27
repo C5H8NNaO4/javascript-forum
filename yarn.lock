@@ -2113,7 +2113,14 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@state-less/react-client@state-less/react-client":
+"@state-less/leap-frontend@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@state-less/leap-frontend/-/leap-frontend-0.0.1.tgz#49437b2f786d26e82b76d546cfd0bf7e8ebd4f9a"
+  integrity sha512-nv+0mxvjeF+mn3KOhNNmlsDhOwsU1m+pN9Py4Pkt72wvGTLMEaUqT8H0m0ztg2AT3+Rhbm6xpu5RHjcL0V9K7w==
+  dependencies:
+    "@state-less/react-client" "^2.0.12"
+
+"@state-less/react-client@^2.0.12", "@state-less/react-client@state-less/react-client":
   version "2.0.12"
   resolved "https://codeload.github.com/state-less/react-client/tar.gz/4c694a8425791f7f4a1937e62498ce051bc2b24e"
   dependencies:
