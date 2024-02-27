@@ -47,13 +47,17 @@ type MarkdownProps = {
 
 export const FetchSOAnswerById = (id, url) => async () => {
   const res = await fetch(
-    `https://api.stackexchange.com/2.3/answers/${id}?order=desc&sort=activity&site=stackoverflow&filter=!nNPvSNdWme&key=${encodeURIComponent('IQOO7kdoZ)ST9J0b)HCfww((')}&client_id=28299`
+    `https://api.stackexchange.com/2.3/answers/${id}?order=desc&sort=activity&site=stackoverflow&filter=!nNPvSNdWme&key=${encodeURIComponent(
+      'IQOO7kdoZ)ST9J0b)HCfww(('
+    )}&client_id=28299`
   );
 
   const json = await res.json();
   const answer = json?.items?.[0];
 
-  return `${quote(answer?.body)}\n<sub>- [${answer?.owner?.['display_name']}](${answer?.owner?.link}): ${url}</sub>`;
+  return `${quote(answer?.body)}\n<sub>- [${answer?.owner?.['display_name']}](${
+    answer?.owner?.link
+  }): ${url}</sub>`;
 };
 
 export const FetchTextContent = (url) => async () => {
@@ -258,7 +262,7 @@ export const Markdown = ({
         }
 
         if (language === 'mermaid') {
-          return <Mermaid>{props?.children?.[0].props.children}</Mermaid>;
+          return <Mermaid>{props?.children?.props?.children}</Mermaid>;
         }
 
         const child = Array.isArray(props.children)
@@ -271,7 +275,7 @@ export const Markdown = ({
               <IconButton
                 sx={{ ml: 'auto', mb: -7, color: 'white' }}
                 onClick={() => {
-                  copy(props?.children?.[0].props.children);
+                  copy(props?.children?.[0]?.props.children);
                   dispatch({
                     type: Actions.SHOW_MESSAGE,
                     value: 'Copied to clipboard',
@@ -282,7 +286,7 @@ export const Markdown = ({
               </IconButton>
             </Box>
             <SyntaxHighlighter language={language} style={a11yDark}>
-              {child.props.children}
+              {child?.props.children}
             </SyntaxHighlighter>
           </>
         );
