@@ -8,6 +8,10 @@ import {
   FORUM_QA_GH,
   FORUM_RULES_GH,
 } from './lib/config';
+import { useContext } from 'react';
+import { Actions, stateContext } from './provider/StateProvider';
+import { Box, CardHeader, Link, Typography } from '@mui/material';
+import { Home } from '@mui/icons-material';
 
 export const navigation = [['/', 'Home', '', 'Forum', HomeIcon]] as any;
 
@@ -31,7 +35,16 @@ export const routes = [
   <Route
     path="/:post"
     Component={() => {
-      return <PostsPage basePath={FORUM_BASE_PATH} forumKey={FORUM_KEY} />;
+      const { dispatch } = useContext(stateContext);
+      return (
+        <PostsPage
+          basePath={FORUM_BASE_PATH}
+          forumKey={FORUM_KEY}
+          onTitleLeave={(v) => {
+            dispatch({ type: Actions.SET_LAST_BC, value: v });
+          }}
+        />
+      );
     }}
   />,
 ];

@@ -195,21 +195,11 @@ export const Layout = () => {
         }
         <main>
           <SidebarNavigation />
-          {!state.fullscreen && state.alerts.info?.length > 0 && (
-            <Alert
-              severity="info"
-              // sx={{ mt: 8 }}
-              action={
-                <Button>
-                  <Link component={RouterLink} to="/changes">
-                    Changes
-                  </Link>
-                </Button>
-              }
-            >
-              {time < 1000 ? messages[1] : messages[3]}
-            </Alert>
-          )}
+          {!state.fullscreen &&
+            state.alerts.info?.length > 0 &&
+            state.alerts.info?.map((msg) => {
+              return <Alert severity="info">{msg}</Alert>;
+            })}
           {cookieConsent === null && (
             <Alert
               severity="info"
