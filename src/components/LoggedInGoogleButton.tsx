@@ -3,11 +3,11 @@ import { authContext } from '@state-less/react-client';
 import { useContext, useState } from 'react';
 import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
 import GoogleIcon from '@mui/icons-material/Google';
-import { GOOGLE_ID } from '../lib/config';
-import { stateContext } from '../provider/StateProvider';
-
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+
+import { GOOGLE_ID } from '../lib/config';
+import { stateContext } from '../provider/StateProvider';
 
 const logError = (e) => {
   console.log('Google Login error', e);
@@ -36,7 +36,7 @@ export const LoggedInGoogleButton = () => {
     return null;
   }
 
-  const decoded = session.strategies.google.decoded;
+  const decoded = session.strategies?.google?.decoded;
 
   return (
     <>
@@ -49,10 +49,10 @@ export const LoggedInGoogleButton = () => {
         color={state.animatedBackground ? 'info' : 'info'}
       >
         <Avatar
-          src={decoded.picture}
+          src={decoded?.picture}
           sx={{ width: 24, height: 24, mr: 1 }}
         ></Avatar>
-        {lessThanSmall ? '' : decoded.given_name}
+        {lessThanSmall ? '' : decoded?.given_name}
       </Button>
       <Menu
         id="basic-menu"
