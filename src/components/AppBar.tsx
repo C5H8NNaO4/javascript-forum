@@ -15,11 +15,8 @@ import { useComponent } from '@state-less/react-client';
 import { Actions, stateContext } from '../provider/StateProvider';
 import { ConnectionCounter } from '../server-components/examples/ConnectionCounter';
 
-// import { GoogleLoginButton } from './LoggedInGoogleButton';
-
 import { BackgroundButton } from './BackgroundButton';
-import { ClientOnly } from '../../../react-server-docs/src/components/ClientOnly';
-import { LoggedInGoogleButton } from './LoggedInGoogleButton';
+import { GoogleLoginButton } from './LoggedInGoogleButton';
 
 const getBreadCrumbs = (pathName, getTitle) => {
   const arr = ['', ...pathName.split('/').filter(Boolean)].map((e) =>
@@ -151,12 +148,12 @@ export default function ButtonAppBar() {
           <Box sx={{ display: 'flex' }}>
             <ConnectionCounter />
             <BackgroundButton />
-            <LoggedInGoogleButton />
+            <GoogleLoginButton />
           </Box>
         )}
         {lessThanSmall && (
           <Box sx={{ ml: 1 }}>
-            <LoggedInGoogleButton />
+            <GoogleLoginButton />
           </Box>
         )}
       </Box>
