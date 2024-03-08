@@ -102,3 +102,5 @@ export const GoogleLoginButton = () => {
     />
   );
 };
+
+export default GoogleLoginButton;

@@ -6,19 +6,20 @@ import IconSearch from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
-import { authContext } from '@state-less/react-client';
 import { useComponent } from '@state-less/react-client';
 
 import { Actions, stateContext } from '../provider/StateProvider';
 import { ConnectionCounter } from '../server-components/examples/ConnectionCounter';
 
-import { GoogleLoginButton } from './LoggedInGoogleButton';
+// import { GoogleLoginButton } from './LoggedInGoogleButton';
+
 import { BackgroundButton } from './BackgroundButton';
+import { ClientOnly } from '../../../react-server-docs/src/components/ClientOnly';
+import { LoggedInGoogleButton } from './LoggedInGoogleButton';
 
 const getBreadCrumbs = (pathName, getTitle) => {
   const arr = ['', ...pathName.split('/').filter(Boolean)].map((e) =>
@@ -150,12 +151,12 @@ export default function ButtonAppBar() {
           <Box sx={{ display: 'flex' }}>
             <ConnectionCounter />
             <BackgroundButton />
-            <GoogleLoginButton />
+            <LoggedInGoogleButton />
           </Box>
         )}
         {lessThanSmall && (
           <Box sx={{ ml: 1 }}>
-            <GoogleLoginButton />
+            <LoggedInGoogleButton />
           </Box>
         )}
       </Box>

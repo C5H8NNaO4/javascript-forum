@@ -18,6 +18,6 @@
     "jsx": "react-jsx",
     "noImplicitAny": false,
   },
-  "include": ["src"],
+  "include": ["src", "../react-server-docs/src/components/ClientOnly.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }],
 }

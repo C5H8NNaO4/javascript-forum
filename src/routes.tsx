@@ -43,6 +43,10 @@ export const routes = [
           onTitleLeave={(v) => {
             dispatch({ type: Actions.SET_LAST_BC, value: v });
           }}
+          settings={{
+            forumTitle: 'JavaScript Forum',
+            renderMetaTags: true
+          }}
         />
       );
     }}

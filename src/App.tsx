@@ -25,15 +25,7 @@ function App() {
           ></script>
         </Helmet>
       )}
-      <ApolloProvider
-        client={
-          import.meta.env.MODE === 'production'
-            ? client
-            : USE_PROD_CLIENT
-              ? client
-              : localClient
-        }
-      >
+      <ApolloProvider client={USE_PROD_CLIENT ? client : localClient}>
         <AuthProvider>
           <StateProvider>
             <ThemeProvider>
